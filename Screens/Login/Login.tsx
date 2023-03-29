@@ -195,8 +195,8 @@ const Login = () => {
 
                     console.log(ReadingDate, '---1111---', moment().utcOffset('+05:30').format('YYYY-MM-DD'));
 
-                    if (ReadingDate == moment().utcOffset('+05:30').format('YYYY-MM-DD')) {
-                        // if (ReadingDate == "2023-03-29") {
+                    // if (ReadingDate == moment().utcOffset('+05:30').format('YYYY-MM-DD')) {
+                        if (ReadingDate == "2023-03-30") {
                         navigation.navigate('NavigationScreen');
                     } else {
                         if (MeaterBtnTitle == "Start") {
@@ -513,11 +513,24 @@ const Login = () => {
 
 
             </Animated.View>
+            <DropdownAlert
+                ref={(ref) => {
+                    if (ref) {
+                        dropDownAlertRef = ref;
+                    }
+                }}
+            />
             <View style={style.headerContainer}>
                 <Text style={style.headerText}>Hello</Text>
                 <Text style={style.headerText1}>Welcome Back..!</Text>
             </View>
-
+            <DropdownAlert
+                ref={(ref) => {
+                    if (ref) {
+                        dropDownAlertRef = ref;
+                    }
+                }}
+            />
             <ScrollView>
                 <View style={style.imagecontainer}>
                     <Image style={{ width: '100%', height: 200, }}
