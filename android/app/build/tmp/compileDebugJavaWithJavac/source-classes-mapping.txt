@@ -1,0 +1,14 @@
+com/domexapp/BuildConfig.java
+ com.domexapp.BuildConfig
+com/domexapp/MainActivity.java
+ com.domexapp.MainActivity
+com/domexapp/ReactNativeFlipper.java
+ com.domexapp.ReactNativeFlipper
+ com.domexapp.ReactNativeFlipper$1
+ com.domexapp.ReactNativeFlipper$2
+ com.domexapp.ReactNativeFlipper$2$1
+com/facebook/react/PackageList.java
+ com.facebook.react.PackageList
+com/domexapp/MainApplication.java
+ com.domexapp.MainApplication
+ com.domexapp.MainApplication$1
