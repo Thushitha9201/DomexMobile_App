@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "D:\\Pristine_Mobile_Projects\\GIT_Project\\Domex_APP\\DomexMobileApplication\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-ta\\values-ta.xml",
+            "outputFile": "D:\\Pristine_Mobile_Projects\\GIT_Project\\Domex_APP\\Domex_New\\DomexMobile_App\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-ta\\values-ta.xml",
             "map": [
                 {
                     "source": "C:\\Users\\User\\.gradle\\caches\\transforms-3\\dae511b76fc5abe0b43b7dfd722fa90e\\transformed\\jetified-play-services-base-17.6.0\\res\\values-ta\\values.xml",

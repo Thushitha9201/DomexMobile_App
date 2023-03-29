@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "D:\\Pristine_Mobile_Projects\\GIT_Project\\Domex_APP\\DomexMobileApplication\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-sk\\values-sk.xml",
+            "outputFile": "D:\\Pristine_Mobile_Projects\\GIT_Project\\Domex_APP\\Domex_New\\DomexMobile_App\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-sk\\values-sk.xml",
             "map": [
                 {
                     "source": "C:\\Users\\User\\.gradle\\caches\\transforms-3\\060dff7644d80534b68ae20379930fc6\\transformed\\jetified-play-services-basement-17.6.0\\res\\values-sk\\values.xml",
