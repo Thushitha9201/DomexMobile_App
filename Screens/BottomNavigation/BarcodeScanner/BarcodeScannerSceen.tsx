@@ -21,6 +21,8 @@ import ActionButton from '../../../Components/ActionButton';
 import BarcodeScanner from 'react-native-scan-barcode';
 import AsyncStorage from '@react-native-community/async-storage';
 import AsyncStorageConstants from '../../../Constants/AsyncStorageConstants';
+import { getLastBarcodeId, SAVE_PACKAGE_BARCODE } from '../../../SQLiteDatabase/DBControllers/PACKAGE_BARCODE_Controller';
+import DropdownAlert from 'react-native-dropdownalert';
 // import CameraKitCameraScreen
 // import {CameraKitCameraScreen} from 'react-native-camera-kit';
 
@@ -33,55 +35,123 @@ const BarcodeScannerSceen = (props: any) => {
   const [data, setData] = useState("Not Found");
   const [torchMode, sertorchMode] = useState('off');
   const [cameraType, setcameraType] = useState("back");
-  const [userbarcode,setuserbarcode] = useState([]);
+  const [userbarcode,setuserbarcode]: any = useState([]);
+  const [barcodevalue, setbarcodevalue] = useState('');
+  const [BarcodeIDNewID, setBarcodeIDNewID] = useState(0);
+
+  
+  //let BarcodeIDNewID =0;
+  //const [packageID, setpackageID] = useState('1234psdf');
+  
 
 
-  var bar: any;
+  var  packageID: any;
+
+  useEffect(() => {
+    BarcodeID_Number();
+  })
 
   const bttnFunction = () => {
     navigation.navigate('ScannerdBarcodeList')
-
   }
 
   const backfuntion = () => {
     navigation.goBack();
   }
+
+  const BarcodeID_Number = () => {
+    getLastBarcodeId((result: any) => {
+      //packageID=parseInt(result) + 1
+      setBarcodeIDNewID(parseInt(result) + 1);
+    })}
+
   const barcodeReceived = (e) => {
 
     // Alert.alert('Scan', e.data)
-    
-    console.log(userbarcode,'nnnnnnn=================');
+    console.log(e.data,'nnnnnnn=================');
     if (userbarcode.includes(e.data)) {
       //console.log(userbarcode.includes(e.data));
       console.log('haiiiiiiiiii');
-      setuserbarcode(userbarcode.filter((data) => data !== e.data));
+      setuserbarcode(userbarcode.filter((id:any) => id !== e.data));
     } else {
       console.log("else");
-
-
-      setuserbarcode([userbarcode, e.data]);
+      setuserbarcode([...userbarcode, e.data]);
+      //saveBarcode_data(e.data);
       // console.log(userbarcode,"eeeeee");
-     
+    }
   }
     
-    
-    //AsyncStorage.setItem(AsyncStorageConstants.ASYNC_STORAGE_BARCODE,userbarcode)
+  
 
-    // if ((userbarcode =="")|| (e.data =! userbarcode) ) {
-    //   setuserbarcode(e.data);
-    //   AsyncStorage.setItem(AsyncStorageConstants.ASYNC_STORAGE_BARCODE,userbarcode)
-    //   console.log(userbarcode,'///////////');  
-    //   Alert.alert('Scan', e.data)
-    // }
-    //console.log(userbarcode,'///////////');
-    // navigation.navigate('ScannerdBarcodeList');
+
+  const add_Barcode_Details = () => {
+    console.log(userbarcode.length, "#####################");
+     try {
+      console.log(BarcodeIDNewID, "dddddddddddd");
+
+    for ( let loop =0 ; loop <userbarcode.length;++loop){
+        BarcodeID_Number();
+        setbarcodevalue(userbarcode[loop]);
+        console.log(userbarcode.length, "NNNNNNNNNNN");
+        console.log(BarcodeIDNewID, "dddddddddddd");
+
+
+      const jsonData = [
+        {
+          id:7,
+          package_id:1,
+          image: 'NULL',      
+          barcode_id:barcodevalue,
+          is_deleted: 0,
+          is_new: 0,  
+          is_synced:0,
+        }
+      ]
+      //console.log('-WWWWWWWW--+++++++>', BarcodeIDNewID);
+      //console.log('coooooooooooooooooo>', userbarcode);
+      if (BarcodeIDNewID != null) {
+        if (userbarcode.length != 0) {
+          SAVE_PACKAGE_BARCODE(jsonData, (result: any) => {
+            console.log(result, "-----------BARCODE INSERT --sucess-------");
+            navigation.navigate('ScannerdBarcodeList')
+          });
+          console.log('Save was sucessful');
+          
+        }else {
+          //DropdownAlert.alertWithType( 'Warning', "Barcode havent' been scaned ");
+        }
+        
+      }else {
+        //DropdownAlert.alertWithType( 'Warning', "ID isn't generated");
+      }
+    }
+    } catch (error) {
+      console.log("SAVE BARCODE DATA -->BARCODE SCANER SCREEEN", error);
+      
+    }
+
   }
 
-  const getBarcode = () => {
-    console.log(userbarcode,'====================================');
-   
+  const saveBarcode_data = (code: any) => {
 
   }
+
+  // const GENARATE_UNIQUEID_BARCODE = () => {
+  //   getLastBarcodeId((result: any) => {
+  //     setlastbarcodeID(result);
+  //       const uniqueID: any[] = [];
+  //       if (result.length == 0) {
+  //           GetLastBarcodeID(0);
+  //       } else {
+  //           for (let i = 0; i < result.length; ++i) {
+  //               GetLastPakageID(result[i]._ID);
+  //           }
+  //       }
+  //   });
+  // };
+
+ 
+
 
 
   return (
@@ -93,6 +163,14 @@ const BarcodeScannerSceen = (props: any) => {
         onPress={backfuntion}
         Is_Search={false}
       />
+      {/* <DropdownAlert
+        ref={(ref) => {
+            if (ref) {
+              dropDownAlertRef = ref;
+            }
+          }}
+        /> */}
+
        <BarcodeScanner
         onBarCodeRead={barcodeReceived}
         style={styles.barcodesty}
@@ -112,16 +190,9 @@ const BarcodeScannerSceen = (props: any) => {
       /> */}
       <View style={{ height: '15%', marginBottom: 60 }}>
                     <ActionButton
-                        onPress={bttnFunction}
+                        onPress={add_Barcode_Details}
                         style={styles.btn}
                         title={'Next'} />
-                </View>
-
-        <View style={{ height: '15%', marginBottom: 60 }}>
-                    <ActionButton
-                        onPress={getBarcode}
-                        style={styles.btn}
-                        title={'TstFunction'} />
                 </View>
     </SafeAreaView>
   );

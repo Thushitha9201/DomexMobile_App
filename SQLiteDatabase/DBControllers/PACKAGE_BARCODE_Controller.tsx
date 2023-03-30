@@ -49,4 +49,12 @@ export const SAVE_PACKAGE_BARCODE = (data:any, callBack:any) => {
         );
     }
 };
-
+export const getLastBarcodeId = (callBack:any) => {
+    DB.searchData(
+      'SELECT _ID FROM PACKAGE_BARCODE ORDER BY _ID DESC LIMIT 1',
+      [],
+      (resp:any, err:any) => {
+        callBack(resp, err);
+      },
+    );
+  };
