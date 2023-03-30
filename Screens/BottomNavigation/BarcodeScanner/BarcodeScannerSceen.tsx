@@ -33,7 +33,10 @@ const BarcodeScannerSceen = (props: any) => {
   const [cameraType, setcameraType] = useState("back");
 
 
+  const bttnFunction = () => {
+    navigation.navigate('ScannerdBarcodeList')
 
+  }
 
   const backfuntion = () => {
     navigation.goBack();
@@ -55,7 +58,7 @@ const BarcodeScannerSceen = (props: any) => {
       />
        <BarcodeScanner
         onBarCodeRead={barcodeReceived}
-        style={{ flex: 1 }}
+        style={styles.barcodesty}
         torchMode={torchMode}
         cameraType={cameraType}
       />
@@ -70,6 +73,12 @@ const BarcodeScannerSceen = (props: any) => {
         torchMode={torchMode}
         cameraType={cameraType}
       /> */}
+      <View style={{ height: '15%', marginBottom: 60 }}>
+                    <ActionButton
+                        onPress={bttnFunction}
+                        style={styles.btn}
+                        title={'Next'} />
+                </View>
     </SafeAreaView>
   );
 };
@@ -84,8 +93,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   btn: {
-    marginRight: 20,
-    marginBottom: 10,
+    marginRight:20,
+
   },
   textStyle: {
     color: 'black',
@@ -110,4 +119,8 @@ const styles = StyleSheet.create({
     color: 'blue',
     paddingVertical: 20,
   },
+  barcodesty: {
+    flex: 1,
+    margin:30,
+  }
 });
