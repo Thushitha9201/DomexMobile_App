@@ -34,6 +34,7 @@ const BarcodeScannerSceen = (props: any) => {
 
 
   const bttnFunction = () => {
+    navigation.navigate('ScannerdBarcodeList')
 
   }
 
@@ -72,7 +73,7 @@ const BarcodeScannerSceen = (props: any) => {
         torchMode={torchMode}
         cameraType={cameraType}
       /> */}
-      <View style={{ height: '15%', marginBottom: 60,marginRight: '5%', marginLeft:'5%' }}>
+      <View style={{ height: '15%', marginBottom: 60 }}>
                     <ActionButton
                         onPress={bttnFunction}
                         style={styles.btn}
@@ -92,7 +93,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   btn: {
-    marginTop:20,
+    marginRight:20,
 
   },
   textStyle: {
