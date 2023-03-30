@@ -19,6 +19,8 @@ import ComponentsStyles from '../../../Constants/ComponentsStyles';
 import TopHeader from '../../../Components/TopHeader';
 import ActionButton from '../../../Components/ActionButton';
 import BarcodeScanner from 'react-native-scan-barcode';
+import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorageConstants from '../../../Constants/AsyncStorageConstants';
 // import CameraKitCameraScreen
 // import {CameraKitCameraScreen} from 'react-native-camera-kit';
 
@@ -31,7 +33,10 @@ const BarcodeScannerSceen = (props: any) => {
   const [data, setData] = useState("Not Found");
   const [torchMode, sertorchMode] = useState('off');
   const [cameraType, setcameraType] = useState("back");
+  const [userbarcode,setuserbarcode] = useState([]);
 
+
+  var bar: any;
 
   const bttnFunction = () => {
     navigation.navigate('ScannerdBarcodeList')
@@ -43,10 +48,42 @@ const BarcodeScannerSceen = (props: any) => {
   }
   const barcodeReceived = (e) => {
 
-    console.log(e.data,'=================');
-    Alert.alert('Scan', e.data)
+    // Alert.alert('Scan', e.data)
+    
+    console.log(userbarcode,'nnnnnnn=================');
+    if (userbarcode.includes(e.data)) {
+      //console.log(userbarcode.includes(e.data));
+      console.log('haiiiiiiiiii');
+      setuserbarcode(userbarcode.filter((data) => data !== e.data));
+    } else {
+      console.log("else");
+
+
+      setuserbarcode([userbarcode, e.data]);
+      // console.log(userbarcode,"eeeeee");
+     
+  }
+    
+    
+    //AsyncStorage.setItem(AsyncStorageConstants.ASYNC_STORAGE_BARCODE,userbarcode)
+
+    // if ((userbarcode =="")|| (e.data =! userbarcode) ) {
+    //   setuserbarcode(e.data);
+    //   AsyncStorage.setItem(AsyncStorageConstants.ASYNC_STORAGE_BARCODE,userbarcode)
+    //   console.log(userbarcode,'///////////');  
+    //   Alert.alert('Scan', e.data)
+    // }
+    //console.log(userbarcode,'///////////');
     // navigation.navigate('ScannerdBarcodeList');
   }
+
+  const getBarcode = () => {
+    console.log(userbarcode,'====================================');
+   
+
+  }
+
+
   return (
     <SafeAreaView style={ComponentsStyles.CONTAINER}>
       <TopHeader
@@ -78,6 +115,13 @@ const BarcodeScannerSceen = (props: any) => {
                         onPress={bttnFunction}
                         style={styles.btn}
                         title={'Next'} />
+                </View>
+
+        <View style={{ height: '15%', marginBottom: 60 }}>
+                    <ActionButton
+                        onPress={getBarcode}
+                        style={styles.btn}
+                        title={'TstFunction'} />
                 </View>
     </SafeAreaView>
   );
