@@ -12,147 +12,131 @@ import {
   PermissionsAndroid,
   Platform,
   StyleSheet,
-  Alert,
+  Alert, Animated, Keyboard, Dimensions, FlatList
 } from 'react-native';
 import ComponentsStyles from '../../../Constants/ComponentsStyles';
 // import BarcodeScanner from 'react-native-scan-barcode';
 import TopHeader from '../../../Components/TopHeader';
 import ActionButton from '../../../Components/ActionButton';
-import BarcodeScanner from 'react-native-scan-barcode';
 import AsyncStorage from '@react-native-community/async-storage';
 import AsyncStorageConstants from '../../../Constants/AsyncStorageConstants';
 import { getLastBarcodeId, SAVE_PACKAGE_BARCODE } from '../../../SQLiteDatabase/DBControllers/PACKAGE_BARCODE_Controller';
 import DropdownAlert from 'react-native-dropdownalert';
+import { RNCamera } from 'react-native-camera';
+let width = Dimensions.get("screen").width;
+let height = Dimensions.get("screen").height;
+import IconA from 'react-native-vector-icons/Ionicons';
+import IconB from 'react-native-vector-icons/MaterialCommunityIcons';
 // import CameraKitCameraScreen
 // import {CameraKitCameraScreen} from 'react-native-camera-kit';
-
+let ListArray1: any[] = [];
 const BarcodeScannerSceen = (props: any) => {
 
   const {
     navigation, route
   } = props;
 
-  const [data, setData] = useState("Not Found");
-  const [torchMode, sertorchMode] = useState('off');
-  const [cameraType, setcameraType] = useState("back");
-  const [userbarcode,setuserbarcode]: any = useState([]);
-  const [barcodevalue, setbarcodevalue] = useState('');
-  const [BarcodeIDNewID, setBarcodeIDNewID] = useState(0);
-
-  
-  //let BarcodeIDNewID =0;
-  //const [packageID, setpackageID] = useState('1234psdf');
-  
+  const [modalStyle, setModalStyle] = useState(new Animated.Value(height));
+  const [barcodes, setBarcodes] = useState([]);
+  const [ListArray, setListArray]: any[] = useState([]);
+  const [isShowSweep, setIsShowSweep] = useState(true);
+  // var  packageID: any;
+  const handleBarcodeScan = (event) => {
+    console.log(event);
 
 
-  var  packageID: any;
+    if (event.type === RNCamera.Constants.BarCodeType.qr || RNCamera.Constants.BarCodeType.ean13) {
+      const barcodeData = event.data;
+      if (!barcodes.includes(barcodeData)) {
+        setBarcodesdata(barcodeData)
 
+      } else {
+        Alert.alert('Already added..! ')
+      }
+    }
+  };
   useEffect(() => {
-    BarcodeID_Number();
+    // BarcodeID_Number();
+    ListArray1 = [];
   })
 
-  const bttnFunction = () => {
-    navigation.navigate('ScannerdBarcodeList')
+  const setBarcodesdata = (data) => {
+    Alert.alert('Scaned Barcode No : ', data, [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      { text: 'OK', onPress: () => setBarcodes([...barcodes, data]) },
+    ]);
+
+
   }
+
 
   const backfuntion = () => {
     navigation.goBack();
   }
 
-  const BarcodeID_Number = () => {
-    getLastBarcodeId((result: any) => {
-      //packageID=parseInt(result) + 1
-      setBarcodeIDNewID(parseInt(result) + 1);
-    })}
 
-  const barcodeReceived = (e) => {
-
-    // Alert.alert('Scan', e.data)
-    console.log(e.data,'nnnnnnn=================');
-    if (userbarcode.includes(e.data)) {
-      //console.log(userbarcode.includes(e.data));
-      console.log('haiiiiiiiiii');
-      setuserbarcode(userbarcode.filter((id:any) => id !== e.data));
-    } else {
-      console.log("else");
-      setuserbarcode([...userbarcode, e.data]);
-      //saveBarcode_data(e.data);
-      // console.log(userbarcode,"eeeeee");
-    }
-  }
-    
-  
 
 
   const add_Barcode_Details = () => {
-    console.log(userbarcode.length, "#####################");
-     try {
-      console.log(BarcodeIDNewID, "dddddddddddd");
+    console.log(barcodes.length, "#####################");
+    console.log(barcodes, "#####################");
+    for (let i = 0; barcodes.length > i; i++) {
+      console.log(barcodes[i]);
 
-    for ( let loop =0 ; loop <userbarcode.length;++loop){
-        BarcodeID_Number();
-        setbarcodevalue(userbarcode[loop]);
-        console.log(userbarcode.length, "NNNNNNNNNNN");
-        console.log(BarcodeIDNewID, "dddddddddddd");
-
-
-      const jsonData = [
-        {
-          id:7,
-          package_id:1,
-          image: 'NULL',      
-          barcode_id:barcodevalue,
-          is_deleted: 0,
-          is_new: 0,  
-          is_synced:0,
-        }
-      ]
-      //console.log('-WWWWWWWW--+++++++>', BarcodeIDNewID);
-      //console.log('coooooooooooooooooo>', userbarcode);
-      if (BarcodeIDNewID != null) {
-        if (userbarcode.length != 0) {
-          SAVE_PACKAGE_BARCODE(jsonData, (result: any) => {
-            console.log(result, "-----------BARCODE INSERT --sucess-------");
-            navigation.navigate('ScannerdBarcodeList')
-          });
-          console.log('Save was sucessful');
-          
-        }else {
-          //DropdownAlert.alertWithType( 'Warning', "Barcode havent' been scaned ");
-        }
-        
-      }else {
-        //DropdownAlert.alertWithType( 'Warning', "ID isn't generated");
-      }
+      ListArray1.push({
+        id: barcodes[i],
+      });
+      setListArray(ListArray1)
+      slideInModal();
     }
+  }
+  const slideInModal = () => {
+
+    try {
+
+      setIsShowSweep(false);
+      console.log('sampleIn');
+
+      Animated.timing(modalStyle, {
+        toValue: height / 3.2,
+        duration: 500,
+        useNativeDriver: false,
+      }).start();
+
     } catch (error) {
-      console.log("SAVE BARCODE DATA -->BARCODE SCANER SCREEEN", error);
-      
+      Alert.alert(error + "");
     }
 
+
+  };
+
+  const Save_All_Data = () => {
+
   }
-
-  const saveBarcode_data = (code: any) => {
-
-  }
-
-  // const GENARATE_UNIQUEID_BARCODE = () => {
-  //   getLastBarcodeId((result: any) => {
-  //     setlastbarcodeID(result);
-  //       const uniqueID: any[] = [];
-  //       if (result.length == 0) {
-  //           GetLastBarcodeID(0);
-  //       } else {
-  //           for (let i = 0; i < result.length; ++i) {
-  //               GetLastPakageID(result[i]._ID);
-  //           }
-  //       }
-  //   });
-  // };
-
- 
+  const slideOutModal = () => {
 
 
+    try {
+
+
+      setIsShowSweep(true);
+      Keyboard.dismiss();
+      Animated.timing(modalStyle, {
+        toValue: height,
+        duration: 500,
+        useNativeDriver: false,
+      }).start();
+
+
+    } catch (error) {
+      Alert.alert(error + "");
+    }
+
+  };
 
   return (
     <SafeAreaView style={ComponentsStyles.CONTAINER}>
@@ -163,37 +147,95 @@ const BarcodeScannerSceen = (props: any) => {
         onPress={backfuntion}
         Is_Search={false}
       />
-      {/* <DropdownAlert
-        ref={(ref) => {
-            if (ref) {
-              dropDownAlertRef = ref;
+      <Animated.View
+        style={{
+          ...StyleSheet.absoluteFillObject,
+          top: modalStyle,
+          backgroundColor: '#fff',
+          zIndex: 20,
+          borderRadius: 10,
+          elevation: 20,
+          paddingTop: 10,
+          paddingBottom: 10,
+          marginLeft: 0,
+          ...Platform.select({
+            ios: {
+              paddingTop: 10
             }
-          }}
-        /> */}
+          })
+        }}>
 
-       <BarcodeScanner
-        onBarCodeRead={barcodeReceived}
-        style={styles.barcodesty}
-        torchMode={torchMode}
-        cameraType={cameraType}
-      />
-      {/* <ActionButton
-        style={styles.btn}
-        onPress={viewList}
-        title='Scan Finished'
-      /> */}
-      {/* <BarcodeScanner
-        onBarCodeRead={barcodeReceived}
-        style={{ flex: 1 }}
-        torchMode={torchMode}
-        cameraType={cameraType}
-      /> */}
-      <View style={{ height: '15%', marginBottom: 60 }}>
-                    <ActionButton
-                        onPress={add_Barcode_Details}
-                        style={styles.btn}
-                        title={'Next'} />
+
+
+        <View style={styles.modalCont}>
+          <View style={{height:'75%'}}>
+          <FlatList
+            showsHorizontalScrollIndicator={false}
+            // data={Arrays.SelectPackage.Wash.filter(ob => ob.extras == true)}
+            ListHeaderComponent={<View>
+              <View style={{ height: 35, alignItems: 'center', }}>
+                <IconA name='close-circle' size={35} color={ComponentsStyles.COLORS.SECONDRY} onPress={slideOutModal} />
+              </View>
+            </View>}
+           
+            data={ListArray}
+            style={{ marginTop: 10, }}
+            renderItem={({ item }) => {
+              return (
+                <View style={{ borderRadius: 8, margin: 5,  flexDirection: 'row', elevation: 5, backgroundColor: ComponentsStyles.COLORS.WHITE }}>
+                  <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'center' }}>
+                    <Text
+                      style={{
+                        marginLeft: 10,
+                        color: ComponentsStyles.COLORS.BLACK,
+                        fontSize: 16,
+                        fontFamily: ComponentsStyles.FONT_FAMILY.BOLD,
+
+                      }}>No :
+                      {item.id}
+                    </Text>
+                  </View>
+                  <View style={{ flex: 0.4, alignItems: 'flex-end' }}>
+                    <IconB name='delete' size={30} color={ComponentsStyles.COLORS.SECONDRY} onPress={slideOutModal} />
+                  </View>
+
                 </View>
+              );
+            }}
+            // onRefresh={() => null}
+            // refreshing={onRefresh}
+            keyExtractor={item => `${item.id}`}
+          />
+          </View>
+          
+          <View style={{height:'10%'}}>
+              <ActionButton
+                onPress={Save_All_Data}
+                style={styles.btn1}
+                title={'View Scanned List'} />
+            </View>
+          
+
+         
+        </View>
+
+
+      </Animated.View>
+      <RNCamera
+        style={{ flex: 1 }}
+        onBarCodeRead={handleBarcodeScan}
+        barCodeTypes={[RNCamera.Constants.BarCodeType.qr, RNCamera.Constants.BarCodeType.ean13]}
+        flashMode={RNCamera.Constants.FlashMode.on}
+
+      />
+
+
+      <View style={{ height: '15%', marginBottom: 60 }}>
+        <ActionButton
+          onPress={add_Barcode_Details}
+          style={styles.btn}
+          title={'Next'} />
+      </View>
     </SafeAreaView>
   );
 };
@@ -208,7 +250,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   btn: {
-    marginRight:20,
+    marginRight: 20,
+
+  },
+  btn1: {
+    marginTop:20,
+    marginRight: 20,
 
   },
   textStyle: {
@@ -236,6 +283,13 @@ const styles = StyleSheet.create({
   },
   barcodesty: {
     flex: 1,
-    margin:30,
-  }
+    margin: 30,
+  },
+  modalCont: {
+    flex: 1,
+    flexGrow: 1,
+    width: width,
+    paddingHorizontal: 10,
+
+  },
 });

@@ -36,6 +36,8 @@ import DeviceInfo from 'react-native-device-info';
 import moment from "moment";
 import DropdownAlert from "react-native-dropdownalert";
 import { getLastMeterReadingValueType, saveMeterReading } from "../../SQLiteDatabase/DBControllers/METER_READING_Controller";
+import GetLocation from 'react-native-get-location'
+
 
 requestPermission();
 let height = Dimensions.get("screen").height;
@@ -66,6 +68,10 @@ const Login = () => {
     const [MeaterBtnTitle, setMeaterBtnTitle] = useState('');
 
 
+    const [Latitude, setLatitude]:any = useState('');
+    const [Longitude, setLongitude]:any = useState('');
+
+
 
 
     useFocusEffect(
@@ -80,6 +86,24 @@ const Login = () => {
                 // Windows: "{2cf7cb3c-da7a-d508-0d7f-696bb51185b4}"
                 console.log('=================================================================r', uniqueId);
             });
+            GetLocation.getCurrentPosition({
+                enableHighAccuracy: true,
+                timeout: 5000,
+            })
+            .then(location => {
+                console.log(location);
+
+                console.log(location.latitude);
+                console.log(location.longitude);
+
+                setLatitude(location.latitude)
+                setLongitude(location.longitude);
+                
+            })
+            .catch(error => {
+                const { code, message } = error;
+                console.warn(code, message);
+            })
 
             // setChecked(false);
             Get_LastMeterReading_Value();
@@ -250,8 +274,8 @@ const Login = () => {
                             readingType: 'IN',
                             Creation_date: CreateTime,
                             branch_id: 0,
-                            longitude: 0.00,
-                            latitude: 0.00,
+                            longitude: Longitude,
+                            latitude: Latitude,
                             reader_value: mValue,
                             remark: remark,
                             is_sync: 1,

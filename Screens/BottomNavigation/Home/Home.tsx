@@ -31,10 +31,10 @@ const width = Dimensions.get('screen').width;
 var UniqueVlue: any;
 
 
-var date = new Date().getDate(); //Current Date
-var month = new Date().getMonth() + 1; //Current Month
-var year = new Date().getFullYear(); //Current Year
-var create_Date = year + "-" + month + "-" + date;
+// var date = new Date().getDate(); //Current Date
+// var month = new Date().getMonth() + 1; //Current Month
+// var year = new Date().getFullYear(); //Current Year
+// var create_Date = year + "-" + month + "-" + date;
 
 const Home = (props: any) => {
   const {
