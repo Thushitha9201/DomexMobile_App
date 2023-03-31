@@ -77,6 +77,8 @@ const Login = () => {
     useFocusEffect(
         React.useCallback(() => {
 
+            
+
             DB.createTables();
             DB.tableIndexKey();
             DeviceInfo.getUniqueId().then((uniqueId) => {
@@ -111,14 +113,23 @@ const Login = () => {
             getLogin_Password().then(res => {
                 console.log('============================111=====================================', res);
 
-                if (res == null || res == "") {
+                if (res == null || res == "" || res == "null") {
                     setSelection(false);
                     console.log('Nulllllllllllllllllll*****************************');
+                    setuName('');
+                    setPword('');
+
                 } else {
                     setPword(res);
 
                     getLogin_UserName().then(res => {
-                        setuName(res);
+
+                        if(res=="null"){
+                            setuName('');
+                        }else{
+                            setuName(res);
+                        }
+                       
                     })
                     setSelection(true);
 
@@ -127,6 +138,8 @@ const Login = () => {
                 }
 
             })
+
+            
         }, [])
     );
 
@@ -157,12 +170,11 @@ const Login = () => {
             }
         });
     }
-    const HandleClick = () => {
+    const HandleClick = async () => {
         console.log("===***********************************=");
-
         setSelection(true);
-
     }
+
     const loginFuntion = () => {
 
         const URL = "http://servingcloudinc.com/domex/index.php/users/logIn";
@@ -192,6 +204,12 @@ const Login = () => {
                     if (isSelected) {
                         AsyncStorage.setItem(AsyncStorageConstants.ASYNC_STORAGE_LOGIN_USER_NAME, uName)
                         AsyncStorage.setItem(AsyncStorageConstants.ASYNC_STORAGE_LOGIN_USER_PASSWORD, pword)
+
+                        // console.log(AsyncStorageConstants.ASYNC_STORAGE_LOGIN_USER_NAME,'uuuuuuuuuuuuuuuu');
+                        // console.log(AsyncStorageConstants.ASYNC_STORAGE_LOGIN_USER_PASSWORD,'pppppppppp');
+                        // console.log(uName,'====================================');
+                        // console.log();
+                        // console.log(pword,'====================================');
                     }
                     AsyncStorage.setItem(AsyncStorageConstants.ASYNC_STORAGE_LOGIN_USER_NAME, uName)
                     AsyncStorage.setItem(AsyncStorageConstants.ASYNC_USER_ID, response.data.sync_data.user_info.user_id)
@@ -605,6 +623,7 @@ const Login = () => {
                     onPress={Validate}
                     title="Login"
                 />
+
                 {/* <ActionButton
                     innerStyle={style.ButtonStyle}
                     onPress={Calculation}

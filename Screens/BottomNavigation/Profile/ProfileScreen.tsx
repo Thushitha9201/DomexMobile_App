@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Alert, SafeAreaView, ScrollView, StyleSheet, Text, ToastAndroid, View } from "react-native";
+import { Alert, Animated, Platform, SafeAreaView, ScrollView, StyleSheet, Text, ToastAndroid, View } from "react-native";
 import ActionButton from "../../../Components/ActionButton";
 import ComponentsStyles from "../../../Constants/ComponentsStyles";
 import styles from "./Style";
@@ -18,6 +18,9 @@ import { Get_All_User_Data } from "../../../SQLiteDatabase/DBControllers/USER_Co
 import DropdownAlert from "react-native-dropdownalert";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 import packageJson from '../../../package.json';
+import RBSheetConfirmComponent from "../../../Components/RBSheetConfirmComponent";
+import AsyncStorage from "@react-native-community/async-storage";
+import AsyncStorageConstants from "../../../Constants/AsyncStorageConstants";
 
 var date = new Date().getDate(); //Current Date
 var month = new Date().getMonth() + 1; //Current Month
@@ -38,7 +41,7 @@ let readingID: any;
 var datec = year + "-" + month + "-" + date;
 var currenttime = hours + ":" + min + ":" + sec;
 
-const ProfileScreen = () => {
+const ProfileScreen = (props: any) => {
     const refRBSheet = useRef();
     const [value, setvalue] = useState('');
     const [readtype, setReadtype] = useState('');
@@ -54,7 +57,15 @@ const ProfileScreen = () => {
     const [fullName, setfullName] = useState('');
     const [UseId, setUseId] = useState('');
 
+    const [uName, setuName] = useState('');
+    const [pword, setPword] = useState('');
+
     const [remark, setremark] = useState('');
+
+    const {
+        navigation, route
+    } = props;
+   
 
     let dropDownAlertRef = useRef();
 
@@ -294,6 +305,41 @@ const ProfileScreen = () => {
         }
     };
 
+    // const Logout =() =>{
+    //    Alert.alert("Are you Sure You want to log out");
+
+    // }
+
+    const Handlelogout = async () => {
+        Alert.alert("Are you Sure You want to log out");    
+        }
+        console.log('Done')
+    
+
+        await AsyncStorage.clear();
+
+        AsyncStorage.setItem(AsyncStorageConstants.ASYNC_STORAGE_LOGIN_USER_NAME, 'null')
+        AsyncStorage.setItem(AsyncStorageConstants.ASYNC_STORAGE_LOGIN_USER_PASSWORD, 'null')
+        AsyncStorage.setItem(AsyncStorageConstants.ASYNC_USER_ID, 'null')
+ 
+        navigation.navigate('Login')
+        
+    }
+
+    const HandleYes = () => {
+        // if (ScreenType === 'Home') {
+        //     navigation.navigate('MapScreen');
+        // } else if (ScreenType === 'PackagesList') {
+        //     navigation.navigate('BarcodeScanner');
+        // } 
+        Alert.alert("Are you Sure You want to log out");
+    }
+    const HandleNo = () => {
+        console.log("aaaaaaaaaaaaaaaa");
+
+        refRBSheet.current.close()
+    }
+
 
     return (
         <SafeAreaView style={ComponentsStyles.CONTAINER}>
@@ -304,11 +350,31 @@ const ProfileScreen = () => {
                     }
                 }}
                 />
-             <Spinner
+            <Spinner
                 visible={isLoading}
                 textContent={'Saving...'}
                 textStyle={{ color: '#FFF' }}
             />
+            {/* <Animated.View
+                style={{
+                    ...StyleSheet.absoluteFillObject,
+                    top: modalStyle,
+                    backgroundColor: '#fff',
+                    zIndex: 20,
+                    borderRadius: 10,
+                    elevation: 20,
+                    paddingTop: 10,
+                    paddingBottom: 10,
+                    marginLeft: 0,
+                    ...Platform.select({
+                        ios: {
+                            paddingTop: 10
+                        }
+                    })
+                }}>
+            </Animated.View> */}
+
+             
             <View style={{ height: 150, backgroundColor: ComponentsStyles.COLORS.BACKGROUND, flexDirection: 'row', borderBottomRightRadius: 20, borderBottomLeftRadius: 20 }}>
                 <View style={{ flex: 1, alignItems: 'center', marginTop: 20 }}>
                     <View style={{ borderColor: 'white', borderWidth: 2, height: 100, width: 100, borderRadius: 90, marginBottom: 150 }}>
@@ -353,9 +419,11 @@ const ProfileScreen = () => {
                 <ProfileComponent
                     Title="Log out"
                     IconName='login'
+                    onPress={Handlelogout}
                 />
                 <View style={{ marginTop: 20 }}></View>
 
+                
             </ScrollView>
             <View style={{ height: 60, marginBottom: 70, alignItems: 'center', justifyContent: 'center' }}>
                 <Text style={{ fontSize: 17, color: ComponentsStyles.COLORS.ICON_BLUE ,fontFamily:ComponentsStyles.FONT_FAMILY.SEMI_BOLD}}>Privacy Policy | Terms of Service App</Text>
@@ -383,6 +451,8 @@ const ProfileScreen = () => {
                     },
                 }}
             >
+                
+
 
                 <View>
                     {/* <View style={{ height: 25, alignItems: 'center', justifyContent: 'center' }}>
@@ -508,8 +578,9 @@ const ProfileScreen = () => {
                         //style={styles.actionbuttonBottom}
                     />
                 </View>
-
+               
             </RBSheet>
+           
 
         </SafeAreaView>
     );
