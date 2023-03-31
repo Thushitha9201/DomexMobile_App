@@ -219,8 +219,8 @@ const Login = () => {
 
                     console.log(ReadingDate, '---1111---', moment().utcOffset('+05:30').format('YYYY-MM-DD'));
 
-                    // if (ReadingDate == moment().utcOffset('+05:30').format('YYYY-MM-DD')) {
-                        if (ReadingDate == "2023-03-30") {
+                    if (ReadingDate == moment().utcOffset('+05:30').format('YYYY-MM-DD')) {
+                        // if (ReadingDate == "2023-03-30") {
                         navigation.navigate('NavigationScreen');
                     } else {
                         if (MeaterBtnTitle == "Start") {
