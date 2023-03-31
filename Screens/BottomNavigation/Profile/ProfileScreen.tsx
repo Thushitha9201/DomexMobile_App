@@ -312,7 +312,6 @@ const ProfileScreen = (props: any) => {
 
     const Handlelogout = async () => {
         Alert.alert("Are you Sure You want to log out");    
-        }
         console.log('Done')
     
 
