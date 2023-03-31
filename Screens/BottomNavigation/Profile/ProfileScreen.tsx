@@ -305,13 +305,8 @@ const ProfileScreen = (props: any) => {
         }
     };
 
-    // const Logout =() =>{
-    //    Alert.alert("Are you Sure You want to log out");
-
-    // }
-
-    const Handlelogout = async () => {
-        Alert.alert("Are you Sure You want to log out");    
+    //function for clear async storage data
+    const Handlelogout = async () => {    
         console.log('Done')
     
 
@@ -324,20 +319,17 @@ const ProfileScreen = (props: any) => {
         navigation.navigate('Login')
         
     }
+    // Function for logout confirmation alert
+    const LogoutAlert = () =>
+    Alert.alert('Log Out !', 'Are you Sure You want to log out ?', [
+      {
+        text: 'No',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {text: 'Yes', onPress: (Handlelogout)},
+    ]);
 
-    const HandleYes = () => {
-        // if (ScreenType === 'Home') {
-        //     navigation.navigate('MapScreen');
-        // } else if (ScreenType === 'PackagesList') {
-        //     navigation.navigate('BarcodeScanner');
-        // } 
-        Alert.alert("Are you Sure You want to log out");
-    }
-    const HandleNo = () => {
-        console.log("aaaaaaaaaaaaaaaa");
-
-        refRBSheet.current.close()
-    }
 
 
     return (
@@ -418,7 +410,7 @@ const ProfileScreen = (props: any) => {
                 <ProfileComponent
                     Title="Log out"
                     IconName='login'
-                    onPress={Handlelogout}
+                    onPress={LogoutAlert}
                 />
                 <View style={{ marginTop: 20 }}></View>
 
