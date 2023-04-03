@@ -21,6 +21,8 @@ import packageJson from '../../../package.json';
 import RBSheetConfirmComponent from "../../../Components/RBSheetConfirmComponent";
 import AsyncStorage from "@react-native-community/async-storage";
 import AsyncStorageConstants from "../../../Constants/AsyncStorageConstants";
+import { clearDataBase, createDataBase, deleteByTableName } from "../../../SQLiteDatabase/DBService";
+import { getTableNames } from "../../../SQLiteDatabase/DBControllers/LoginController";
 
 var date = new Date().getDate(); //Current Date
 var month = new Date().getMonth() + 1; //Current Month
@@ -304,6 +306,34 @@ const ProfileScreen = (props: any) => {
             console.log('Enter meater valuve');
         }
     };
+    //function to get all table names for delete
+
+    const clearTableData = () => {
+        try {
+            getTableNames((result: any) => {
+
+                //call query to get all the table names in DB
+            //console.log("//////<><><><________",result );
+
+            for(let i = 0; i < result.length; ++i){
+
+                let nameofTable = result[i].name;
+
+                if (nameofTable !== 'sqlite_sequence' && nameofTable !== 'android_metadata'){
+                    
+                    console.log("//////<><><><________",nameofTable );
+                    //send all table names to delete data one by one
+                    deleteByTableName(nameofTable);
+
+                }
+            }
+           });
+        
+
+        } catch (error) {
+          console.log('Table Data Deleting Error' + error);
+        }
+    };
 
     //function for clear async storage data
     const Handlelogout = async () => {    
@@ -311,14 +341,20 @@ const ProfileScreen = (props: any) => {
     
 
         await AsyncStorage.clear();
+        //Clear AsyncStorage data
 
         AsyncStorage.setItem(AsyncStorageConstants.ASYNC_STORAGE_LOGIN_USER_NAME, 'null')
         AsyncStorage.setItem(AsyncStorageConstants.ASYNC_STORAGE_LOGIN_USER_PASSWORD, 'null')
         AsyncStorage.setItem(AsyncStorageConstants.ASYNC_USER_ID, 'null')
- 
+        //set AsyncStorage constant data to null
+        
+        clearTableData();
+
         navigation.navigate('Login')
+        //navigate to login screen
         
     }
+
     // Function for logout confirmation alert
     const LogoutAlert = () =>
     Alert.alert('Log Out !', 'Are you Sure You want to log out ?', [
