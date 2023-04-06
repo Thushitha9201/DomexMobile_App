@@ -217,7 +217,7 @@ db.transaction(
 
 db.transaction(
   (tx:any) => {
-    const query_idx_ticketSpareParts = `CREATE UNIQUE INDEX IF NOT EXISTS idx_PACKAGE_BARCODE ON  PACKAGE_BARCODE(id) `;
+    const query_idx_ticketSpareParts = `CREATE UNIQUE INDEX IF NOT EXISTS idx_PACKAGE_BARCODE ON  PACKAGE_BARCODE(barcode_id) `;
 
     tx.executeSql(
       query_idx_ticketSpareParts,
