@@ -1,9 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Alert, SafeAreaView, ScrollView, StyleSheet, Text, ToastAndroid, View } from "react-native";
+import { Alert, SafeAreaView, ScrollView, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
 import ActionButton from "../../../Components/ActionButton";
 import ComponentsStyles from "../../../Constants/ComponentsStyles";
 import styles from "./Style";
 import RBSheet from "react-native-raw-bottom-sheet";
+import IconA from 'react-native-vector-icons/Ionicons';
 import IconB from 'react-native-vector-icons/AntDesign';
 import IconD from 'react-native-vector-icons/MaterialIcons';
 import IconC from 'react-native-vector-icons/EvilIcons';
@@ -18,6 +19,7 @@ import { Get_All_User_Data } from "../../../SQLiteDatabase/DBControllers/USER_Co
 import DropdownAlert from "react-native-dropdownalert";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 import packageJson from '../../../package.json';
+import ImagePicker, { ImageOrVideo } from 'react-native-image-crop-picker';
 
 var date = new Date().getDate(); //Current Date
 var month = new Date().getMonth() + 1; //Current Month
@@ -45,6 +47,7 @@ const ProfileScreen = () => {
     const [headertext, setheadertext] = useState('');
     const [MeterReading, setMeaterReading] = useState('');
     const [ButtonTitle, setButtonTitle] = useState('');
+    const [image, setImage] = useState();
 
     const [meterValue, setMeterValue] = useState('');
     const [ImgStatus, setImgStatus] = useState(false);
@@ -294,6 +297,33 @@ const ProfileScreen = () => {
         }
     };
 
+    //capture meter reading image
+
+    const openCamera = () => {
+        ImagePicker.openCamera({
+          cropping: true,
+          mediaType: 'photo',
+          includeBase64: true,
+        }).then((imageData) => {
+          const base64Data = imageData.data;
+          const fileName = getUniqueFileName('jpg');
+          // writeFileToStorage(base64Data, fileName);
+        });
+      }
+      const getUniqueFileName = (fileExt: string) => {
+        //It is better naming file with current timestamp to achieve unique name
+        var d = new Date();
+        var year = d.getFullYear();
+        var month = d.getMonth() + 1;
+        var date = d.getDate();
+        var hour = d.getHours();
+        var minute = d.getMinutes();
+        var fileName = 'IMG' + year + month + date + hour + minute + '.' + fileExt;
+        console.log(fileName,'//////////////////////////////////////');
+        
+        return fileName;
+      };
+
 
     return (
         <SafeAreaView style={ComponentsStyles.CONTAINER}>
@@ -496,6 +526,26 @@ const ProfileScreen = () => {
 
 
                     {/* <View style={{ height: 1, backgroundColor: ComponentsStyles.COLORS.BLACK }} /> */}
+                    <View style={{ justifyContent: "center", alignItems: "center", flexDirection: "column",marginTop:30 }} >
+                        <Text style={style.modalTitle}>Update the photo of the meter</Text>
+                        <Text style={style.modalTitle}>time you are starting from</Text>
+                    </View>
+
+                    <View style={style.txtUpload}>
+                        {
+                            image ?
+
+                                <View style={{ flexDirection: 'row', }}>
+                                    <Text style={{ fontFamily: ComponentsStyles.FONT_FAMILY.BOLD, color: ComponentsStyles.COLORS.ORANGE, fontSize: 18, marginRight: 5 }}>Image Uploaded</Text>
+                                    <IconA name='ios-checkmark-circle' size={20} color={ComponentsStyles.COLORS.LOW_BUTTON_GREEN} style={{ marginRight: 5 }} />
+                                </View>
+                                    :
+                                <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", flexDirection: "row", }} onPress={openCamera}>
+                                    <IconA name='cloud-upload' size={20} color={ComponentsStyles.COLORS.ICON_BLUE} style={{ marginRight: 5 }} />
+                                    <Text style={{ fontFamily: ComponentsStyles.FONT_FAMILY.BOLD, color: ComponentsStyles.COLORS.ICON_BLUE, fontSize: 18, marginRight: 5 }}>Photo of Meter*</Text>
+                                </TouchableOpacity>
+                                }
+                    </View>
 
                   
 
