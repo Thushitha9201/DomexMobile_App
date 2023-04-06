@@ -154,7 +154,7 @@ const InstanstPickupPaymentScreen = (props: any) => {
                         <View style={{ backgroundColor: ComponentsStyles.COLORS.WHITE, elevation: 10, margin: 5, marginTop: 30, borderRadius: 10 }}>
                             <View style={{ flexDirection: 'row', marginTop: 5 }}>
                                 <View style={{ flex: 2 }}>
-                                    <Text style={{ fontSize: 20, marginLeft: 10, color: ComponentsStyles.COLORS.BLACK }}>Packages Free</Text>
+                                    <Text style={{ fontSize: 20, marginLeft: 10, color: ComponentsStyles.COLORS.BLACK }}>Packages Fee</Text>
                                 </View>
                                 <View style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'flex-end' }}>
                                     <Text style={{ fontSize: 20, marginRight: 10, color: ComponentsStyles.COLORS.BLACK, fontWeight: '600' }}>{SubAmount}.00</Text>

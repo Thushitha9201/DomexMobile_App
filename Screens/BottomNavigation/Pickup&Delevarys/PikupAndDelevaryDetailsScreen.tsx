@@ -156,7 +156,7 @@ const PikupAndDelevaryDetailsScreen = (props: any) => {
     return (
         <SafeAreaView style={ComponentsStyles.CONTAINER}>
             <TopHeader
-                HeaderText="Request Detils"
+                HeaderText="Request Details"
                 Is_subtext={false}
                 is_menu={false}
                 onPress={backfuntion}
@@ -363,7 +363,7 @@ const PikupAndDelevaryDetailsScreen = (props: any) => {
 
 
                     <DetailsComponent
-                        HeaderText="Special Introduction"
+                        HeaderText="Special Instruction"
                         DetailsText={specialIntroduction}
                     />
                     <DetailsComponent

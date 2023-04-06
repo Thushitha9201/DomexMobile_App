@@ -193,10 +193,10 @@ const PaymentSceen = (props: any) => {
 
             setReciername(result[0].recevier_name)
             if (result[0].Tempory_Credit_Status == 1) {
-                setttemporyCredit('Avalable');
+                setttemporyCredit('Available ');
                 setCurrentOutstanding(result[0].Tempory_Credit_Outstanding)
             } else {
-                setttemporyCredit('Not Avalable');
+                setttemporyCredit('Not available ');
             }
 
             setspecialIntroduction(result[0].recevier_name)
@@ -267,7 +267,7 @@ const PaymentSceen = (props: any) => {
                         <View style={{margin: 5, backgroundColor: ComponentsStyles.COLORS.WHITE, elevation: 8, }}>
                             <View style={{ flexDirection: 'row', height: 40 }}>
                                 <View style={{ flex: 2, justifyContent: 'center', marginLeft: 5 }}>
-                                    <Text style={{ fontSize: 15, fontFamily: ComponentsStyles.FONT_FAMILY.BOLD, color: ComponentsStyles.COLORS.GREEN }}>Temporary Credit Avalable</Text>
+                                    <Text style={{ fontSize: 15, fontFamily: ComponentsStyles.FONT_FAMILY.BOLD, color: ComponentsStyles.COLORS.GREEN }}>Temporary Credit available </Text>
                                 </View>
                                 <View style={{ flex: 1, justifyContent: 'center' }}>
                                     <Text style={{ fontSize: 15, fontFamily: ComponentsStyles.FONT_FAMILY.SEMI_BOLD, color: ComponentsStyles.COLORS.SECONDRY }}>{temporyCredit}</Text>

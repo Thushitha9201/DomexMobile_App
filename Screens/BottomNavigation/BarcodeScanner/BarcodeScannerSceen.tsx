@@ -208,7 +208,7 @@ const BarcodeScannerSceen = (props: any) => {
   return (
     <SafeAreaView style={ComponentsStyles.CONTAINER}>
       <TopHeader
-        HeaderText="Pickup List"
+        HeaderText="Pick Up Confirmation"
         Is_subtext={false}
         is_menu={false}
         onPress={backfuntion}
