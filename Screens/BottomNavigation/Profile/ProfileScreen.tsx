@@ -1,9 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Alert, Animated, Platform, SafeAreaView, ScrollView, StyleSheet, Text, ToastAndroid, View } from "react-native";
+import { Alert, Animated, Platform, SafeAreaView, ScrollView, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
 import ActionButton from "../../../Components/ActionButton";
 import ComponentsStyles from "../../../Constants/ComponentsStyles";
 import styles from "./Style";
 import RBSheet from "react-native-raw-bottom-sheet";
+import IconA from 'react-native-vector-icons/Ionicons';
 import IconB from 'react-native-vector-icons/AntDesign';
 import IconD from 'react-native-vector-icons/MaterialIcons';
 import IconC from 'react-native-vector-icons/EvilIcons';
@@ -21,6 +22,8 @@ import packageJson from '../../../package.json';
 import RBSheetConfirmComponent from "../../../Components/RBSheetConfirmComponent";
 import AsyncStorage from "@react-native-community/async-storage";
 import AsyncStorageConstants from "../../../Constants/AsyncStorageConstants";
+import { clearDataBase, createDataBase, deleteByTableName } from "../../../SQLiteDatabase/DBService";
+import { getTableNames } from "../../../SQLiteDatabase/DBControllers/LoginController";
 
 var date = new Date().getDate(); //Current Date
 var month = new Date().getMonth() + 1; //Current Month
@@ -48,6 +51,7 @@ const ProfileScreen = (props: any) => {
     const [headertext, setheadertext] = useState('');
     const [MeterReading, setMeaterReading] = useState('');
     const [ButtonTitle, setButtonTitle] = useState('');
+    const [image, setImage] = useState();
 
     const [meterValue, setMeterValue] = useState('');
     const [ImgStatus, setImgStatus] = useState(false);
@@ -304,6 +308,34 @@ const ProfileScreen = (props: any) => {
             console.log('Enter meater valuve');
         }
     };
+    //function to get all table names for delete
+
+    const clearTableData = () => {
+        try {
+            getTableNames((result: any) => {
+
+                //call query to get all the table names in DB
+            //console.log("//////<><><><________",result );
+
+            for(let i = 0; i < result.length; ++i){
+
+                let nameofTable = result[i].name;
+
+                if (nameofTable !== 'sqlite_sequence' && nameofTable !== 'android_metadata'){
+                    
+                    console.log("//////<><><><________",nameofTable );
+                    //send all table names to delete data one by one
+                    deleteByTableName(nameofTable);
+
+                }
+            }
+           });
+        
+
+        } catch (error) {
+          console.log('Table Data Deleting Error' + error);
+        }
+    };
 
     //function for clear async storage data
     const Handlelogout = async () => {    
@@ -311,14 +343,20 @@ const ProfileScreen = (props: any) => {
     
 
         await AsyncStorage.clear();
+        //Clear AsyncStorage data
 
         AsyncStorage.setItem(AsyncStorageConstants.ASYNC_STORAGE_LOGIN_USER_NAME, 'null')
         AsyncStorage.setItem(AsyncStorageConstants.ASYNC_STORAGE_LOGIN_USER_PASSWORD, 'null')
         AsyncStorage.setItem(AsyncStorageConstants.ASYNC_USER_ID, 'null')
- 
+        //set AsyncStorage constant data to null
+        
+        clearTableData();
+
         navigation.navigate('Login')
+        //navigate to login screen
         
     }
+
     // Function for logout confirmation alert
     const LogoutAlert = () =>
     Alert.alert('Log Out !', 'Are you Sure You want to log out ?', [
@@ -556,7 +594,30 @@ const ProfileScreen = (props: any) => {
 
 
 
-                    {/* <View style={{ height: 1, backgroundColor: ComponentsStyles.COLORS.BLACK }} /> */}
+                     {/* <View style={{ height: 1, backgroundColor: ComponentsStyles.COLORS.BLACK }} />  */}
+
+                    {/* <Text style={style.subtxt}>OR</Text> */}
+
+                    <View style={{ justifyContent: "center", alignItems: "center", flexDirection: "column",marginTop:30 }}>
+                        <Text style={style.modalTitle}>Update the photo of the meter</Text>
+                        <Text style={style.modalTitle}>time you are starting from</Text>
+                    </View>
+
+                    <View style={style.txtUpload}>
+                        {
+                            image ?
+
+                                <View style={{ flexDirection: 'row', }}>
+                                    <Text style={{ fontFamily: ComponentsStyles.FONT_FAMILY.BOLD, color: ComponentsStyles.COLORS.ORANGE, fontSize: 18, marginRight: 5 }}>Image Uploaded</Text>
+                                    <IconA name='ios-checkmark-circle' size={20} color={ComponentsStyles.COLORS.LOW_BUTTON_GREEN} style={{ marginRight: 5 }} />
+                                </View>
+                                    :
+                                <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", flexDirection: "row", }}>
+                                    <IconA name='cloud-upload' size={20} color={ComponentsStyles.COLORS.ICON_BLUE} style={{ marginRight: 5 }} />
+                                    <Text style={{ fontFamily: ComponentsStyles.FONT_FAMILY.BOLD, color: ComponentsStyles.COLORS.ICON_BLUE, fontSize: 18, marginRight: 5 }}>Photo of Meter*</Text>
+                                </TouchableOpacity>
+                                }
+                            </View>
 
                   
 
@@ -619,8 +680,7 @@ const style = StyleSheet.create({
         color: ComponentsStyles.COLORS.BLACK,
         fontSize: 13,
         fontFamily: ComponentsStyles.FONT_FAMILY.SEMI_BOLD,
-        marginBottom: 10,
-        marginTop: 10,
+        marginBottom: 10
     },
     ActionButton: {
         marginTop: 20,
