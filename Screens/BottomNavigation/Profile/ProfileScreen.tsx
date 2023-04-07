@@ -19,6 +19,8 @@ import { Get_All_User_Data } from "../../../SQLiteDatabase/DBControllers/USER_Co
 import DropdownAlert from "react-native-dropdownalert";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 import packageJson from '../../../package.json';
+
+import ImagePicker, { ImageOrVideo } from 'react-native-image-crop-picker';
 import RBSheetConfirmComponent from "../../../Components/RBSheetConfirmComponent";
 import AsyncStorage from "@react-native-community/async-storage";
 import AsyncStorageConstants from "../../../Constants/AsyncStorageConstants";
@@ -369,6 +371,33 @@ const ProfileScreen = (props: any) => {
     ]);
 
 
+    //capture meter reading image
+
+    const openCamera = () => {
+        ImagePicker.openCamera({
+          cropping: true,
+          mediaType: 'photo',
+          includeBase64: true,
+        }).then((imageData) => {
+          const base64Data = imageData.data;
+          const fileName = getUniqueFileName('jpg');
+          // writeFileToStorage(base64Data, fileName);
+        });
+      }
+      const getUniqueFileName = (fileExt: string) => {
+        //It is better naming file with current timestamp to achieve unique name
+        var d = new Date();
+        var year = d.getFullYear();
+        var month = d.getMonth() + 1;
+        var date = d.getDate();
+        var hour = d.getHours();
+        var minute = d.getMinutes();
+        var fileName = 'IMG' + year + month + date + hour + minute + '.' + fileExt;
+        console.log(fileName,'//////////////////////////////////////');
+        
+        return fileName;
+      };
+
 
     return (
         <SafeAreaView style={ComponentsStyles.CONTAINER}>
@@ -594,11 +623,9 @@ const ProfileScreen = (props: any) => {
 
 
 
-                     {/* <View style={{ height: 1, backgroundColor: ComponentsStyles.COLORS.BLACK }} />  */}
-
-                    {/* <Text style={style.subtxt}>OR</Text> */}
 
                     <View style={{ justifyContent: "center", alignItems: "center", flexDirection: "column",marginTop:30 }}>
+
                         <Text style={style.modalTitle}>Update the photo of the meter</Text>
                         <Text style={style.modalTitle}>time you are starting from</Text>
                     </View>
@@ -612,14 +639,15 @@ const ProfileScreen = (props: any) => {
                                     <IconA name='ios-checkmark-circle' size={20} color={ComponentsStyles.COLORS.LOW_BUTTON_GREEN} style={{ marginRight: 5 }} />
                                 </View>
                                     :
-                                <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", flexDirection: "row", }}>
+                                <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", flexDirection: "row", }} onPress={openCamera}>
+
                                     <IconA name='cloud-upload' size={20} color={ComponentsStyles.COLORS.ICON_BLUE} style={{ marginRight: 5 }} />
                                     <Text style={{ fontFamily: ComponentsStyles.FONT_FAMILY.BOLD, color: ComponentsStyles.COLORS.ICON_BLUE, fontSize: 18, marginRight: 5 }}>Photo of Meter*</Text>
                                 </TouchableOpacity>
                                 }
-                            </View>
 
-                  
+                            </View>
+        
 
                     <ActionButton
                         title={ButtonTitle}
