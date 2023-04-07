@@ -27,7 +27,7 @@ const ScanComponent = ({ FirstIcon,Textview, onPress, disabled, headerstyle, tex
                 <Text style={{ color: ComponentsStyles.COLORS.SECONDRY, fontSize: 18, fontFamily: ComponentsStyles.FONT_FAMILY.BOLD, marginLeft: 10 }}>{Textview}</Text>
             </View>
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <IconA name="delete" size={25} color={ComponentsStyles.COLORS.ICON_BLUE} />
+                {/* <IconA name="delete" size={25} color={ComponentsStyles.COLORS.ICON_BLUE} /> */}
             </View>
         </View>
 

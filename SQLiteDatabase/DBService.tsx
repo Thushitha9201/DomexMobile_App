@@ -6,6 +6,11 @@ const db = SQLite.openDatabase({
   location: 'default',
 });
 
+
+
+
+
+
 export const createTables = () => {
 
   db.transaction(
@@ -217,7 +222,7 @@ db.transaction(
 
 db.transaction(
   (tx:any) => {
-    const query_idx_ticketSpareParts = `CREATE UNIQUE INDEX IF NOT EXISTS idx_PACKAGE_BARCODE ON  PACKAGE_BARCODE(id) `;
+    const query_idx_ticketSpareParts = `CREATE UNIQUE INDEX IF NOT EXISTS idx_PACKAGE_BARCODE ON  PACKAGE_BARCODE(barcode_id) `;
 
     tx.executeSql(
       query_idx_ticketSpareParts,
@@ -638,6 +643,19 @@ export const deleteData = (data:any, callBack:any) => {
     callBack(null, error); //notify caller
   }
 };
+
+//Delete Tables by name
+export const deleteByTableName = (tableName: any) => {
+  try {
+    db.executeSql(
+      `DELETE FROM ${tableName}`,
+    );
+    console.log(tableName,'delete data sucessful');
+  } catch (error) {
+    console.log('delete data error: ', tableName);
+  }
+  
+}
 
 //SEARCH QUERY
 export const searchData = (query: any, params: any, callBack: any) => {

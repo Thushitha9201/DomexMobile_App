@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Alert, SafeAreaView, ScrollView, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
+import { Alert, Animated, Platform, SafeAreaView, ScrollView, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
 import ActionButton from "../../../Components/ActionButton";
 import ComponentsStyles from "../../../Constants/ComponentsStyles";
 import styles from "./Style";
@@ -19,7 +19,13 @@ import { Get_All_User_Data } from "../../../SQLiteDatabase/DBControllers/USER_Co
 import DropdownAlert from "react-native-dropdownalert";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 import packageJson from '../../../package.json';
+
 import ImagePicker, { ImageOrVideo } from 'react-native-image-crop-picker';
+import RBSheetConfirmComponent from "../../../Components/RBSheetConfirmComponent";
+import AsyncStorage from "@react-native-community/async-storage";
+import AsyncStorageConstants from "../../../Constants/AsyncStorageConstants";
+import { clearDataBase, createDataBase, deleteByTableName } from "../../../SQLiteDatabase/DBService";
+import { getTableNames } from "../../../SQLiteDatabase/DBControllers/LoginController";
 
 var date = new Date().getDate(); //Current Date
 var month = new Date().getMonth() + 1; //Current Month
@@ -40,7 +46,7 @@ let readingID: any;
 var datec = year + "-" + month + "-" + date;
 var currenttime = hours + ":" + min + ":" + sec;
 
-const ProfileScreen = () => {
+const ProfileScreen = (props: any) => {
     const refRBSheet = useRef();
     const [value, setvalue] = useState('');
     const [readtype, setReadtype] = useState('');
@@ -57,7 +63,15 @@ const ProfileScreen = () => {
     const [fullName, setfullName] = useState('');
     const [UseId, setUseId] = useState('');
 
+    const [uName, setuName] = useState('');
+    const [pword, setPword] = useState('');
+
     const [remark, setremark] = useState('');
+
+    const {
+        navigation, route
+    } = props;
+   
 
     let dropDownAlertRef = useRef();
 
@@ -296,6 +310,66 @@ const ProfileScreen = () => {
             console.log('Enter meater valuve');
         }
     };
+    //function to get all table names for delete
+
+    const clearTableData = () => {
+        try {
+            getTableNames((result: any) => {
+
+                //call query to get all the table names in DB
+            //console.log("//////<><><><________",result );
+
+            for(let i = 0; i < result.length; ++i){
+
+                let nameofTable = result[i].name;
+
+                if (nameofTable !== 'sqlite_sequence' && nameofTable !== 'android_metadata'){
+                    
+                    console.log("//////<><><><________",nameofTable );
+                    //send all table names to delete data one by one
+                    deleteByTableName(nameofTable);
+
+                }
+            }
+           });
+        
+
+        } catch (error) {
+          console.log('Table Data Deleting Error' + error);
+        }
+    };
+
+    //function for clear async storage data
+    const Handlelogout = async () => {    
+        console.log('Done')
+    
+
+        await AsyncStorage.clear();
+        //Clear AsyncStorage data
+
+        AsyncStorage.setItem(AsyncStorageConstants.ASYNC_STORAGE_LOGIN_USER_NAME, 'null')
+        AsyncStorage.setItem(AsyncStorageConstants.ASYNC_STORAGE_LOGIN_USER_PASSWORD, 'null')
+        AsyncStorage.setItem(AsyncStorageConstants.ASYNC_USER_ID, 'null')
+        //set AsyncStorage constant data to null
+        
+        clearTableData();
+
+        navigation.navigate('Login')
+        //navigate to login screen
+        
+    }
+
+    // Function for logout confirmation alert
+    const LogoutAlert = () =>
+    Alert.alert('Log Out !', 'Are you Sure You want to log out ?', [
+      {
+        text: 'No',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {text: 'Yes', onPress: (Handlelogout)},
+    ]);
+
 
     //capture meter reading image
 
@@ -334,11 +408,31 @@ const ProfileScreen = () => {
                     }
                 }}
                 />
-             <Spinner
+            <Spinner
                 visible={isLoading}
                 textContent={'Saving...'}
                 textStyle={{ color: '#FFF' }}
             />
+            {/* <Animated.View
+                style={{
+                    ...StyleSheet.absoluteFillObject,
+                    top: modalStyle,
+                    backgroundColor: '#fff',
+                    zIndex: 20,
+                    borderRadius: 10,
+                    elevation: 20,
+                    paddingTop: 10,
+                    paddingBottom: 10,
+                    marginLeft: 0,
+                    ...Platform.select({
+                        ios: {
+                            paddingTop: 10
+                        }
+                    })
+                }}>
+            </Animated.View> */}
+
+             
             <View style={{ height: 150, backgroundColor: ComponentsStyles.COLORS.BACKGROUND, flexDirection: 'row', borderBottomRightRadius: 20, borderBottomLeftRadius: 20 }}>
                 <View style={{ flex: 1, alignItems: 'center', marginTop: 20 }}>
                     <View style={{ borderColor: 'white', borderWidth: 2, height: 100, width: 100, borderRadius: 90, marginBottom: 150 }}>
@@ -383,9 +477,11 @@ const ProfileScreen = () => {
                 <ProfileComponent
                     Title="Log out"
                     IconName='login'
+                    onPress={LogoutAlert}
                 />
                 <View style={{ marginTop: 20 }}></View>
 
+                
             </ScrollView>
             <View style={{ height: 60, marginBottom: 70, alignItems: 'center', justifyContent: 'center' }}>
                 <Text style={{ fontSize: 17, color: ComponentsStyles.COLORS.ICON_BLUE ,fontFamily:ComponentsStyles.FONT_FAMILY.SEMI_BOLD}}>Privacy Policy | Terms of Service App</Text>
@@ -413,6 +509,8 @@ const ProfileScreen = () => {
                     },
                 }}
             >
+                
+
 
                 <View>
                     {/* <View style={{ height: 25, alignItems: 'center', justifyContent: 'center' }}>
@@ -525,8 +623,9 @@ const ProfileScreen = () => {
 
 
 
-                    {/* <View style={{ height: 1, backgroundColor: ComponentsStyles.COLORS.BLACK }} /> */}
-                    <View style={{ justifyContent: "center", alignItems: "center", flexDirection: "column",marginTop:30 }} >
+
+                    <View style={{ justifyContent: "center", alignItems: "center", flexDirection: "column",marginTop:30 }}>
+
                         <Text style={style.modalTitle}>Update the photo of the meter</Text>
                         <Text style={style.modalTitle}>time you are starting from</Text>
                     </View>
@@ -541,13 +640,14 @@ const ProfileScreen = () => {
                                 </View>
                                     :
                                 <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", flexDirection: "row", }} onPress={openCamera}>
+
                                     <IconA name='cloud-upload' size={20} color={ComponentsStyles.COLORS.ICON_BLUE} style={{ marginRight: 5 }} />
                                     <Text style={{ fontFamily: ComponentsStyles.FONT_FAMILY.BOLD, color: ComponentsStyles.COLORS.ICON_BLUE, fontSize: 18, marginRight: 5 }}>Photo of Meter*</Text>
                                 </TouchableOpacity>
                                 }
-                    </View>
 
-                  
+                            </View>
+        
 
                     <ActionButton
                         title={ButtonTitle}
@@ -558,8 +658,9 @@ const ProfileScreen = () => {
                         //style={styles.actionbuttonBottom}
                     />
                 </View>
-
+               
             </RBSheet>
+           
 
         </SafeAreaView>
     );
@@ -607,8 +708,7 @@ const style = StyleSheet.create({
         color: ComponentsStyles.COLORS.BLACK,
         fontSize: 13,
         fontFamily: ComponentsStyles.FONT_FAMILY.SEMI_BOLD,
-        marginBottom: 10,
-        marginTop: 10,
+        marginBottom: 10
     },
     ActionButton: {
         marginTop: 20,

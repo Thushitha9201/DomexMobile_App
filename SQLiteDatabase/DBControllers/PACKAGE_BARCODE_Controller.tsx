@@ -58,3 +58,14 @@ export const getLastBarcodeId = (callBack:any) => {
       },
     );
   };
+
+  export const getBarcode_List = (TrackingID: any, callBack: any) => {
+    DB.searchData(
+      'SELECT * FROM PACKAGE_BARCODE WHERE  package_id =? AND is_synced=0',
+      [TrackingID],
+      (resp:any, err:any) => {
+        callBack(resp, err);
+      },
+    );
+  };
+

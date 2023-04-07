@@ -27,6 +27,9 @@ let width = Dimensions.get("screen").width;
 let height = Dimensions.get("screen").height;
 import IconA from 'react-native-vector-icons/Ionicons';
 import IconB from 'react-native-vector-icons/MaterialCommunityIcons';
+import { getTrackingIDAsyncStorage } from '../../../Constants/AsynStorageFuntion';
+import { getLastMeterReadingValueType } from '../../../SQLiteDatabase/DBControllers/METER_READING_Controller';
+import { Get_PackageID_VS_TrackingID } from '../../../SQLiteDatabase/DBControllers/PACKAGE_Contraller';
 // import CameraKitCameraScreen
 // import {CameraKitCameraScreen} from 'react-native-camera-kit';
 let ListArray1: any[] = [];
@@ -40,6 +43,9 @@ const BarcodeScannerSceen = (props: any) => {
   const [barcodes, setBarcodes] = useState([]);
   const [ListArray, setListArray]: any[] = useState([]);
   const [isShowSweep, setIsShowSweep] = useState(true);
+  const [onRefresh, setOnRefresh] = useState(false);
+
+
   // var  packageID: any;
   const handleBarcodeScan = (event) => {
     console.log(event);
@@ -90,7 +96,8 @@ const BarcodeScannerSceen = (props: any) => {
       ListArray1.push({
         id: barcodes[i],
       });
-      setListArray(ListArray1)
+
+      ViewSetList(ListArray1);
       slideInModal();
     }
   }
@@ -114,7 +121,67 @@ const BarcodeScannerSceen = (props: any) => {
 
   };
 
+  const ViewSetList = (data: any) => {
+    setListArray(data)
+  }
+  const DeleteItem_FromArray = (data: any) => {
+    console.log(data, '+++++++++++++++++++++');
+    let valueToRemove = 'item 3';
+
+    // Use the filter method to remove the value
+    setBarcodes(barcodes.filter(item => item !== data));
+    ViewSetList(ListArray1.filter(item => item !== data));
+
+    console.log(barcodes, '???????????/', ListArray);
+    // setOnRefresh(true);
+    add_Barcode_Details();
+    if (barcodes.length > 0) {
+
+    } else {
+      slideOutModal();
+    }
+
+  }
   const Save_All_Data = () => {
+    getTrackingIDAsyncStorage().then(res => {
+      console.log(res, '???????????????????????????');
+      Get_PackageID_VS_TrackingID(res, (result: any) => {
+        console.log(result, ">>>>>>PICKUP>>>>>>>>>");
+
+        const DataArray : any[] = [];
+        for (let i = 0; barcodes.length > i; i++) {
+          const jsonData = 
+            {
+
+              id: 1,
+              package_id: result[0].id,
+              image: "",
+              barcode_id: barcodes[i],
+              is_deleted: 0,
+              is_new: 0,
+              is_synced: 0,
+
+            }
+
+            DataArray.push(jsonData);
+          console.log(DataArray,'>>>>>>>>>>>>>>>.');
+          
+        }
+
+
+        console.log(DataArray,'>>>>>>>>55555555555555555555555>>>>>>>.');
+          
+        
+
+        SAVE_PACKAGE_BARCODE(DataArray, (res: any) => {
+          navigation.navigate('ScannerdBarcodeList');
+    
+        });
+
+
+      });
+    })
+
 
   }
   const slideOutModal = () => {
@@ -168,55 +235,55 @@ const BarcodeScannerSceen = (props: any) => {
 
 
         <View style={styles.modalCont}>
-          <View style={{height:'75%'}}>
-          <FlatList
-            showsHorizontalScrollIndicator={false}
-            // data={Arrays.SelectPackage.Wash.filter(ob => ob.extras == true)}
-            ListHeaderComponent={<View>
-              <View style={{ height: 35, alignItems: 'center', }}>
-                <IconA name='close-circle' size={35} color={ComponentsStyles.COLORS.SECONDRY} onPress={slideOutModal} />
-              </View>
-            </View>}
-           
-            data={ListArray}
-            style={{ marginTop: 10, }}
-            renderItem={({ item }) => {
-              return (
-                <View style={{ borderRadius: 8, margin: 5,  flexDirection: 'row', elevation: 5, backgroundColor: ComponentsStyles.COLORS.WHITE }}>
-                  <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'center' }}>
-                    <Text
-                      style={{
-                        marginLeft: 10,
-                        color: ComponentsStyles.COLORS.BLACK,
-                        fontSize: 16,
-                        fontFamily: ComponentsStyles.FONT_FAMILY.BOLD,
-
-                      }}>No :
-                      {item.id}
-                    </Text>
-                  </View>
-                  <View style={{ flex: 0.4, alignItems: 'flex-end' }}>
-                    <IconB name='delete' size={30} color={ComponentsStyles.COLORS.SECONDRY} onPress={slideOutModal} />
-                  </View>
-
+          <View style={{ height: '75%' }}>
+            <FlatList
+              showsHorizontalScrollIndicator={false}
+              // data={Arrays.SelectPackage.Wash.filter(ob => ob.extras == true)}
+              ListHeaderComponent={<View>
+                <View style={{ height: 35, alignItems: 'center', }}>
+                  <IconA name='close-circle' size={35} color={ComponentsStyles.COLORS.SECONDRY} onPress={slideOutModal} />
                 </View>
-              );
-            }}
-            // onRefresh={() => null}
-            // refreshing={onRefresh}
-            keyExtractor={item => `${item.id}`}
-          />
-          </View>
-          
-          <View style={{height:'10%'}}>
-              <ActionButton
-                onPress={Save_All_Data}
-                style={styles.btn1}
-                title={'View Scanned List'} />
-            </View>
-          
+              </View>}
 
-         
+              data={ListArray}
+              style={{ marginTop: 10, }}
+              renderItem={({ item }) => {
+                return (
+                  <View style={{ borderRadius: 8, margin: 5, flexDirection: 'row', elevation: 5, backgroundColor: ComponentsStyles.COLORS.WHITE }}>
+                    <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'center' }}>
+                      <Text
+                        style={{
+                          marginLeft: 10,
+                          color: ComponentsStyles.COLORS.BLACK,
+                          fontSize: 16,
+                          fontFamily: ComponentsStyles.FONT_FAMILY.BOLD,
+
+                        }}>No :
+                        {item.id}
+                      </Text>
+                    </View>
+                    <View style={{ flex: 0.4, alignItems: 'flex-end' }}>
+                      <IconB name='delete' size={30} color={ComponentsStyles.COLORS.SECONDRY} onPress={() => DeleteItem_FromArray(item.id)} />
+                    </View>
+
+                  </View>
+                );
+              }}
+              // onRefresh={() => null}
+              // refreshing={onRefresh}
+              keyExtractor={item => `${item.id}`}
+            />
+          </View>
+
+          <View style={{ height: '10%' }}>
+            <ActionButton
+              onPress={Save_All_Data}
+              style={styles.btn1}
+              title={'View Scanned List'} />
+          </View>
+
+
+
         </View>
 
 
@@ -254,7 +321,7 @@ const styles = StyleSheet.create({
 
   },
   btn1: {
-    marginTop:20,
+    marginTop: 20,
     marginRight: 20,
 
   },

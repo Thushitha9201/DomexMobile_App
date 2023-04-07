@@ -56,3 +56,16 @@ export const getLoginByUserId = (userID, callBack) => {
         },
     );
 }
+
+export const getTableNames = (callBack:any) => {
+    DB.searchData(
+       "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name",
+        [],
+        (resp, err) => {
+            callBack(resp, err);
+            
+        },
+    );
+
+}
+

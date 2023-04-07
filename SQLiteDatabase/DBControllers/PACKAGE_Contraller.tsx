@@ -393,3 +393,16 @@ export const getPakageAndReciverInfoPayment = (InquriyID: any, callBack: any) =>
             },
         );
     }; 
+
+    export const Get_PackageID_VS_TrackingID = (TrackingID: any, callBack: any) => {
+
+        DB.searchData(
+    
+            "select id  from PACKAGE" +
+            " WHERE PACKAGE.tracking_id=?",
+            [TrackingID],
+            (resp: any, err: any) => {
+                callBack(resp, err);
+            },
+        );
+    };
