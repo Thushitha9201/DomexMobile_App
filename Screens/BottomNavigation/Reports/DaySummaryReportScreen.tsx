@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Alert, FlatList, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
+import { Alert,Animated, Dimensions, FlatList, Keyboard, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import CheckButton from "../../../Components/CheckButton";
 import TopHeader from "../../../Components/TopHeader";
 import ComponentsStyles from "../../../Constants/ComponentsStyles";
@@ -7,7 +7,6 @@ import style from "./DaySummryStyle";
 import Style from "./Style";
 import { PickupList } from '../../../Constants/DummyData';
 import ListComponents from "../../../Components/ListComponents";
-import RBSheet from "react-native-raw-bottom-sheet";
 import ActionButton from "../../../Components/ActionButton";
 import RBSheetConfirmComponent from "../../../Components/RBSheetConfirmComponent";
 import { useNavigation } from "@react-navigation/native";
@@ -33,6 +32,7 @@ import moment from "moment";
 
 let selectTypes: any;
 let choosestatus: any;
+let height = Dimensions.get("screen").height;
 
 var currentDate = new Date();
 var twoDigitMonth = ((currentDate.getMonth() + 1) >= 10) ? (currentDate.getMonth() + 1) : '0' + (currentDate.getMonth() + 1);
@@ -80,6 +80,9 @@ const DaySummaryReportScreen = (props: any) => {
     const [ImgStatus, setImgStatus] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     let dropDownAlertRef = useRef();
+
+    //Animated View
+    const [modalStyle, setModalStyle] = useState(new Animated.Value(height));
 
 
     const cklickPickup = () => {
@@ -161,9 +164,7 @@ const DaySummaryReportScreen = (props: any) => {
     const meaterreading = () => {
 
     }
-    const Logout = () => {
-        refRBSheet.current.open()
-    }
+   
     const backfuntion = () => {
         navigation.goBack();
     }
@@ -321,7 +322,8 @@ const DaySummaryReportScreen = (props: any) => {
                                 dropDownAlertRef.alertWithType,
 
                             );
-                            refRBSheet.current.close()
+                            // refRBSheet.current.close()
+                            slideOutModal()
                         } else {
                             Alert.alert('Failed...!', 'Meter Reading Save Failed.', [
                                 {
@@ -335,7 +337,8 @@ const DaySummaryReportScreen = (props: any) => {
                     console.log(error);
                 }
             } else if (ImgStatus) {
-                refRBSheet.current.close()
+                // refRBSheet.current.close()
+                slideOutModal()
             } else if (meterValue != '') {
                 setIsLoading(true);
                 try {
@@ -376,7 +379,8 @@ const DaySummaryReportScreen = (props: any) => {
                                 'Attendance saved success ',
                                 dropDownAlertRef.alertWithType,
                             );
-                            refRBSheet.current.close()
+                            // refRBSheet.current.close()
+                            slideOutModal()
                         } else {
                             Alert.alert('Failed...!', 'Meter Reading Save Failed.', [
                                 {
@@ -443,6 +447,41 @@ const DaySummaryReportScreen = (props: any) => {
             console.log('ATTENDANCE GET LAST ' + error);
         }
     };
+
+    //Animated View
+    const slideInModal = () => {
+        try {
+            //setIsShowSweep(false);
+            console.log('sampleIn');
+            Animated.timing(modalStyle, {
+                toValue: height / 3.2,
+                duration: 500,
+                useNativeDriver: false,
+            }).start();
+
+        } catch (error) {
+            Alert.alert(error + "");
+        }
+    };
+    //#endregion
+
+    //#region SlideOutModal
+
+    const slideOutModal = () => {
+        try {
+            //setIsShowSweep(true);
+            Keyboard.dismiss();
+            Animated.timing(modalStyle, {
+                toValue: height,
+                duration: 500,
+                useNativeDriver: false,
+            }).start();
+        } catch (error) {
+            Alert.alert(error + "");
+        }
+    };
+
+
     return (
         <SafeAreaView style={ComponentsStyles.CONTAINER}>
             <TopHeader
@@ -681,11 +720,28 @@ const DaySummaryReportScreen = (props: any) => {
                 </View>
                 <View style={{ height: '15%', marginBottom: 60 }}>
                     <ActionButton
-                        onPress={Logout}
+                        onPress={slideInModal}
                         style={style.ButtonStyle}
                         title={ButtonTitle} />
                 </View>
-                <RBSheet
+                <Animated.View
+                style={{
+                    ...StyleSheet.absoluteFillObject,
+                    top: modalStyle,
+                    backgroundColor: '#fff',
+                    zIndex: 20,
+                    borderRadius: 10,
+                    elevation: 20,
+                    paddingTop: 10,
+                    paddingBottom: 10,
+                    marginLeft: 0,
+                    ...Platform.select({
+                        ios: {
+                            paddingTop: 10
+                        }
+                    })
+                }}>
+                {/* <RBSheet
                     ref={refRBSheet}
                     closeOnDragDown={true}
                     closeOnPressMask={false}
@@ -706,7 +762,7 @@ const DaySummaryReportScreen = (props: any) => {
 
                         },
                     }}
-                >
+                > */}
 
                     <View>
                         {/* <View style={{ height: 25, alignItems: 'center', justifyContent: 'center' }}>
@@ -822,7 +878,8 @@ const DaySummaryReportScreen = (props: any) => {
                         />
                     </View>
 
-                </RBSheet>
+                {/* </RBSheet> */}
+            </Animated.View>
             </View>
 
 
