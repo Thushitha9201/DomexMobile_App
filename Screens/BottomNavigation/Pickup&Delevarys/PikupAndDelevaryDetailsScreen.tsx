@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { SafeAreaView, ScrollView, View } from "react-native";
+import { Alert, Animated, Dimensions, Keyboard, Platform, SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import ActionButton from "../../../Components/ActionButton";
 import DetailsComponent from "../../../Components/DetailsComponent";
@@ -15,6 +15,8 @@ import { getScreenTypeAsyncStorage } from '../../../Constants/AsynStorageFuntion
 import AsyncStorage from '@react-native-community/async-storage'
 import AsyncStorageConstants from "../../../Constants/AsyncStorageConstants";
 import OrientationLoadingOverlay from 'react-native-orientation-loading-overlay';
+import CheckButton from "../../../Components/CheckButton";
+import style from "../Home/style";
 
 var ScreenType: any;
 var TrackingID: any;
@@ -36,12 +38,16 @@ var Pweight: any;
 var Plength: any;
 var Pheight: any;
 var Pwidth: any;
+var pendings = true;
+let heigh = Dimensions.get("screen").height;
+
 const PikupAndDelevaryDetailsScreen = (props: any) => {
 
     const {
         navigation, route
     } = props;
 
+  
 
     const [actionButtonTitle, setactionButtonTitle] = useState('');
     const [editdetails, seteditdetails] = useState(false);
@@ -71,11 +77,52 @@ const PikupAndDelevaryDetailsScreen = (props: any) => {
     const [weight, setweight] = useState('');
     // const navigation = useNavigation();
     const [loandingspinner, setloandingspinner] = useState(false);
-    const refRBSheet = useRef();
-    const HandleClick = () => {
-        refRBSheet.current.open()
+    //Animated View 
+    const [modalStyle, setModalStyle] = useState(new Animated.Value(heigh));
+    const [isShowSweep, setIsShowSweep] = useState(true);
+    
+//    const refRBSheet = useRef(); 
+
+    const slideInModal = () => {
+        // refRBSheet.current.open()
+
+        try {
+
+            setIsShowSweep(false);
+            console.log('sampleIn');
+
+            Animated.timing(modalStyle, {
+                toValue: heigh / 1.7,
+                duration: 500,
+                useNativeDriver: false,
+            }).start();
+
+        } catch (error) {
+            Alert.alert(error + "");
+        }
+
+
+    };
+    const slideOutModal = () => {
+        
+        try {
+
+
+            setIsShowSweep(true);
+            Keyboard.dismiss();
+            Animated.timing(modalStyle, {
+                toValue: heigh,
+                duration: 500,
+                useNativeDriver: false,
+            }).start();
+
+
+        } catch (error) {
+            Alert.alert(error + "");
+        }
     }
     const HandleYes = () => {
+        slideOutModal()
         if (ScreenType === 'Home') {
             navigation.navigate('MapScreen');
         } else if (ScreenType === 'PackagesList') {
@@ -85,8 +132,9 @@ const PikupAndDelevaryDetailsScreen = (props: any) => {
     }
     const HandleNo = () => {
         console.log("aaaaaaaaaaaaaaaa");
+        slideOutModal()
 
-        refRBSheet.current.close()
+        navigation.goBack();
     }
     const backfuntion = () => {
         navigation.goBack();
@@ -379,7 +427,7 @@ const PikupAndDelevaryDetailsScreen = (props: any) => {
 
                 </View>
                 <ActionButton
-                    onPress={HandleClick}
+                    onPress={slideInModal}
                     title={actionButtonTitle}
                     style={Style.AttendButton}
                 />
@@ -387,7 +435,53 @@ const PikupAndDelevaryDetailsScreen = (props: any) => {
 
 
             </ScrollView>
-            <RBSheet
+            <Animated.View
+
+                style={{
+                    ...StyleSheet.absoluteFillObject,
+                    top: modalStyle,
+                    backgroundColor: '#fff',
+                    zIndex: 20,
+                    borderTopRightRadius: 10,
+                    borderTopLeftRadius: 10,
+                    borderWidth: 1,
+                    borderColor: ComponentsStyles.COLORS.SECONDRY,
+                    borderRadius: 10,
+                    // borderColor:'red',
+                    elevation: 20,
+                    paddingTop: 10,
+                    paddingBottom: 10,
+                    marginLeft: 0,
+                    ...Platform.select({
+                        ios: {
+                            paddingTop: 10
+                        }
+                    })
+                }}>
+
+                <View style={{ alignItems: 'center', justifyContent: 'center'  }}>
+               
+                <Text style={[style.destailsText ]}>Are You Sure..!</Text>
+                </View>
+
+                <View style={{  alignItems: 'center', justifyContent: 'center', flexDirection: 'row', margin: 10, marginTop: 20}}>
+                <CheckButton
+                    onPress={HandleNo}
+                    headerstyle={style.RByesbtnNo}
+                    textstyle={style.destailsTextbtn}
+                    HeaderText="No"
+                />
+                <CheckButton
+                    onPress={HandleYes}
+                    headerstyle={style.RByesbtn}
+                    textstyle={style.destailsTextbtn}
+                    HeaderText="Yes"
+                    
+                />
+               
+                </View>
+                </Animated.View>
+            {/* <RBSheet
                 ref={refRBSheet}
                 closeOnDragDown={true}
                 closeOnPressMask={false}
@@ -409,14 +503,14 @@ const PikupAndDelevaryDetailsScreen = (props: any) => {
                     },
                 }}
             >
-
                 <RBSheetConfirmComponent
                     HeaderText="Are You Sure..!"
                     YesPress={HandleYes}
                     NoPress={HandleNo}
+
                 />
 
-            </RBSheet>
+            </RBSheet> */}
             <OrientationLoadingOverlay
                 visible={loandingspinner}
                 color={ComponentsStyles.COLORS.WHITE}

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { Alert, Animated, Dimensions, Keyboard, Platform, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import TopHeader from "../../../Components/TopHeader";
 import ComponentsStyles from "../../../Constants/ComponentsStyles";
 import RBSheet from "react-native-raw-bottom-sheet";
@@ -7,7 +7,6 @@ import ActionButton from "../../../Components/ActionButton";
 import Style from "../Pickup&Delevarys/Style";
 import IconA from 'react-native-vector-icons/Ionicons';
 import IconB from 'react-native-vector-icons/MaterialIcons';
-import MapView from 'react-native-maps';
 import Marker from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import { getTrackingIDAsyncStorage,getSelectTypeAsyncStorage } from '../../../Constants/AsynStorageFuntion';
@@ -18,16 +17,21 @@ var TRACKINGID: any;
 var Type: any;
 
 var SelectType:any;
+let heigh = Dimensions.get("screen").height;
 
 const MapScreen = () => {
 
-    const refRBSheet = useRef();
+    // const refRBSheet = useRef();
     const navigation = useNavigation();
     const [Reciername, setReciername] = useState('');
     const [type, settype] = useState('');
     const [Reciermobile, setReciermobile] = useState('');
     const [Recieraddress, setRecieraddress] = useState('');
     // const [selectType, setselectType] = useState("");
+    //Animated View 
+    const [modalStyle, setModalStyle] = useState(new Animated.Value(heigh));
+    // const [isShowSweep, setIsShowSweep] = useState(true);
+    
     useEffect(() => {
         getTrackingIDAsyncStorage().then(res => {
             console.log(res, ';;;;;;;;;;;;;;;;;;;;;;;;;;;');
@@ -68,16 +72,56 @@ const MapScreen = () => {
     const Issueproblem = () => {
         navigation.navigate('IssuesScreen');
     }
-    const HandleReached = () => {
-        refRBSheet.current.open()
+    const slideInModal = () => {
+        
+
+        try {
+
+            // setIsShowSweep(false);
+            console.log('sampleIn');
+
+            Animated.timing(modalStyle, {
+                toValue: heigh / 1.7,
+                duration: 500,
+                useNativeDriver: false,
+            }).start();
+
+        } catch (error) {
+            Alert.alert(error + "");
+        }
+
+
+    };
+    const slideOutModal = () => {
+        
+        try {
+
+
+            // setIsShowSweep(true);
+            Keyboard.dismiss();
+            Animated.timing(modalStyle, {
+                toValue: heigh,
+                duration: 500,
+                useNativeDriver: false,
+            }).start();
+
+
+        } catch (error) {
+            Alert.alert(error + "");
+        }
     }
+    // const HandleReached = () => {
+    //     refRBSheet.current.open()
+    // }
     const HandlePickupIssue = () => {
+        slideOutModal()
         navigation.navigate('IssuesScreen');
     }
     const backfuntion = () => {
         navigation.goBack();
     }
     const HandleProceed = () => {
+        slideOutModal()
         console.log(Type);
         if (Type == 1) {
             console.log("piclkup");
@@ -131,7 +175,7 @@ const MapScreen = () => {
                 </View>
                 <ActionButton
                     title="Reached"
-                    onPress={HandleReached}
+                    onPress={slideInModal}
                     style={Style.Reachedbtn}
                 />
             </View>
@@ -155,7 +199,7 @@ const MapScreen = () => {
                 <Marker coordinate={coordinates[1]} />
             </MapView> */}
 
-            <RBSheet
+            {/* <RBSheet
                 ref={refRBSheet}
                 closeOnDragDown={true}
                 closeOnPressMask={false}
@@ -192,7 +236,46 @@ const MapScreen = () => {
                     />
                 </View>
 
-            </RBSheet>
+            </RBSheet> */}
+
+            <Animated.View
+
+                style={{
+                    ...StyleSheet.absoluteFillObject,
+                    top: modalStyle,
+                    backgroundColor: '#fff',
+                    zIndex: 20,
+                    borderTopRightRadius: 10,
+                    borderTopLeftRadius: 10,
+                    borderWidth: 1,
+                    borderColor: ComponentsStyles.COLORS.SECONDRY,
+                    borderRadius: 10,
+                    // borderColor:'red',
+                    elevation: 20,
+                    paddingTop: 10,
+                    paddingBottom: 10,
+                    marginLeft: 0,
+                    ...Platform.select({
+                        ios: {
+                            paddingTop: 10
+                        }
+                    })
+                }}>
+
+                    <View>
+
+                    <ActionButton
+                        title="Proceed"
+                        style={Style.Reachedbtn}
+                        onPress={HandleProceed}
+                    />
+                    <ActionButton
+                        title={type}
+                        onPress={HandlePickupIssue}
+                        innerStyle={Style.issuebtn}
+                    />
+                    </View>
+                </Animated.View>
         </SafeAreaView>
     );
 }

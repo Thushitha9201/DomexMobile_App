@@ -281,5 +281,28 @@ export default StyleSheet.create({
         color: ComponentsStyles.COLORS.WHITE,
         fontSize: 14,
     },
+
+    RByesbtn:{
+        backgroundColor:'green'
+    },
+    RByesbtnNo:{
+        // backgroundColor:'red'
+        color: ComponentsStyles.COLORS.SECONDRY
+    },
+    destailsText: {
+        fontFamily: ComponentsStyles.FONT_FAMILY.BOLD,
+        fontWeight: '700',
+        //fontSize: 22,
+        color: ComponentsStyles.COLORS.SECONDRY,
+        fontSize: 35,
+        fontStyle: 'normal',
+    },
+    destailsTextbtn: {
+        fontFamily: ComponentsStyles.FONT_FAMILY.BOLD,
+        fontWeight: '700',
+        color: ComponentsStyles.COLORS.WHITE,
+        fontSize: 16,
+        fontStyle: 'normal',
+    },
   
 })

@@ -10,6 +10,7 @@ export default StyleSheet.create({
         justifyContent: 'center',
         margin: 10,
         marginTop: 10,
+        backgroundColor:'red'
     },
     selectedbutton: {
         height: 40,
