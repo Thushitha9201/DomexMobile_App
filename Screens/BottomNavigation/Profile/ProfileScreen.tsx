@@ -1,9 +1,8 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Alert, Animated, Platform, SafeAreaView, ScrollView, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
+import { Alert, Animated, Dimensions, Keyboard, Platform, SafeAreaView, ScrollView, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
 import ActionButton from "../../../Components/ActionButton";
 import ComponentsStyles from "../../../Constants/ComponentsStyles";
 import styles from "./Style";
-import RBSheet from "react-native-raw-bottom-sheet";
 import IconA from 'react-native-vector-icons/Ionicons';
 import IconB from 'react-native-vector-icons/AntDesign';
 import IconD from 'react-native-vector-icons/MaterialIcons';
@@ -42,6 +41,7 @@ var starttime: any;
 let validateReading: any;
 let buttonType: any;
 let readingID: any;
+let height = Dimensions.get("screen").height;
 
 var datec = year + "-" + month + "-" + date;
 var currenttime = hours + ":" + min + ":" + sec;
@@ -68,6 +68,9 @@ const ProfileScreen = (props: any) => {
 
     const [remark, setremark] = useState('');
 
+    //Animated View
+    const [modalStyle, setModalStyle] = useState(new Animated.Value(height));
+
     const {
         navigation, route
     } = props;
@@ -89,11 +92,7 @@ const ProfileScreen = (props: any) => {
     
         }, []),
     );
-    const meeterreading = () => {
-        refRBSheet.current.open()
-    }
- 
-
+   
     const GetHeadereDetails = () => {
 
         Get_All_User_Data( (result: any) => {
@@ -196,7 +195,7 @@ const ProfileScreen = (props: any) => {
                                 dropDownAlertRef.alertWithType,
                                 
                             );
-                            refRBSheet.current.close()
+                            slideOutModal()
                         } else {
                             Alert.alert('Failed...!', 'Meter Reading Save Failed.', [
                                 {
@@ -210,7 +209,7 @@ const ProfileScreen = (props: any) => {
                     console.log(error);
                 }
             } else if (ImgStatus) {
-                refRBSheet.current.close()
+                slideOutModal()
             } else if (meterValue != '') {
                 setIsLoading(true);
                 try {
@@ -251,7 +250,8 @@ const ProfileScreen = (props: any) => {
                                 'Attendance saved success ',
                                 dropDownAlertRef.alertWithType,
                             );
-                            refRBSheet.current.close()
+                            // refRBSheet.current.close()
+                            slideOutModal()
                         } else {
                             Alert.alert('Failed...!', 'Meter Reading Save Failed.', [
                                 {
@@ -398,6 +398,52 @@ const ProfileScreen = (props: any) => {
         return fileName;
       };
 
+    //Animated View func
+     const slideInModal = () => {
+
+        try {
+
+            //setIsShowSweep(false);
+            console.log('sampleIn');
+
+            Animated.timing(modalStyle, {
+                toValue: height / 4,
+                duration: 500,
+                useNativeDriver: false,
+            }).start();
+
+        } catch (error) {
+            Alert.alert(error + "");
+        }
+
+
+    };
+    //#endregion
+
+    //#region SlideOutModal
+
+    const slideOutModal = () => {
+
+
+        try {
+
+
+            //setIsShowSweep(true);
+            Keyboard.dismiss();
+            Animated.timing(modalStyle, {
+                toValue: height,
+                duration: 500,
+                useNativeDriver: false,
+            }).start();
+
+
+        } catch (error) {
+            Alert.alert(error + "");
+        }
+
+    };
+
+
 
     return (
         <SafeAreaView style={ComponentsStyles.CONTAINER}>
@@ -453,7 +499,7 @@ const ProfileScreen = (props: any) => {
                     <ActionButton
                         title="Check In/Out"
                         innerStyle={styles.Reachedbtn}
-                        onPress={meeterreading}
+                        onPress={slideInModal}
                     />
                 </View>
                 {/* <ProfileComponent
@@ -483,32 +529,30 @@ const ProfileScreen = (props: any) => {
 
                 
             </ScrollView>
+            
             <View style={{ height: 60, marginBottom: 70, alignItems: 'center', justifyContent: 'center' }}>
                 <Text style={{ fontSize: 17, color: ComponentsStyles.COLORS.ICON_BLUE ,fontFamily:ComponentsStyles.FONT_FAMILY.SEMI_BOLD}}>Privacy Policy | Terms of Service App</Text>
                 <Text style={{fontFamily:ComponentsStyles.FONT_FAMILY.SEMI_BOLD}}>Version {packageJson.version}</Text>
             </View>
-            <RBSheet
-                ref={refRBSheet}
-                closeOnDragDown={true}
-                closeOnPressMask={false}
-                closeDuration={250}
-                customStyles={{
-                    wrapper: {
-                        backgroundColor: "transparent", height: 60
-                    },
-                    draggableIcon: {
-                        backgroundColor: "#000"
-                    },
-                    container: {
-                        height: '67%',
-                        borderTopRightRadius: 10,
-                        borderTopLeftRadius: 10,
-                        borderWidth: 1,
-                        borderColor: ComponentsStyles.COLORS.SECONDRY
-
-                    },
-                }}
-            >
+            
+            <Animated.View
+                style={{
+                    ...StyleSheet.absoluteFillObject,
+                    top: modalStyle,
+                    backgroundColor: '#fff',
+                    zIndex: 20,
+                    borderRadius: 10,
+                    elevation: 20,
+                    paddingTop: 10,
+                    paddingBottom: 10,
+                    marginLeft: 0,
+                    ...Platform.select({
+                        ios: {
+                            paddingTop: 10
+                        }
+                    })
+                }}>
+           
                 
 
 
@@ -658,8 +702,8 @@ const ProfileScreen = (props: any) => {
                         //style={styles.actionbuttonBottom}
                     />
                 </View>
-               
-            </RBSheet>
+            </Animated.View>
+            
            
 
         </SafeAreaView>
