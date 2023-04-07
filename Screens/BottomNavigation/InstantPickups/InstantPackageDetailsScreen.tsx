@@ -788,7 +788,7 @@ const InstantPackageDetailsScreen = (props: any) => {
                                         style={{ flexDirection: 'row-reverse', alignSelf: 'flex-start' }}
                                     />
                                     <RadioButton.Item
-                                        label="Some Day"
+                                        label="Same day"
                                         value="3"
                                         color={ComponentsStyles.COLORS.ICON_BLUE}
                                         style={{ flexDirection: 'row-reverse', alignSelf: 'flex-start' }}
@@ -944,7 +944,7 @@ const InstantPackageDetailsScreen = (props: any) => {
                                             exstyle={style.exstyle}
                                             is_ex={true}
                                             editable={true}
-                                            ex="No.Package *"
+                                            ex="No.Packages *"
                                             stateValue={NoofPackages}
                                             setState={(val) => setNoofPackages(val)}
                                             style={style.detailsInputText}
@@ -973,7 +973,7 @@ const InstantPackageDetailsScreen = (props: any) => {
                                             exstyle={style.exstyle}
                                             is_ex={true}
                                             editable={true}
-                                            ex="Special Instruction"
+                                            ex="Special Instructions"
                                             max={50}
                                             stateValue={Special}
                                             setState={(val) => setSpecial(val)}
@@ -1074,7 +1074,7 @@ const InstantPackageDetailsScreen = (props: any) => {
                                             exstyle={style.exstyle}
                                             is_ex={true}
                                             editable={true}
-                                            ex="Distict  "
+                                            ex="District  "
                                             stateValue={district}
                                             max={200}
                                             setState={(val) => setdistrict(val)}

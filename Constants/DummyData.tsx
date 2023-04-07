@@ -412,14 +412,14 @@ export const IssueProblem = [
     },
     {
         id: 2,
-        issue_name: "No item for pickup",
+        issue_name: "No item for pick up",
         is_act:1,
         is_deleted:0,
         collection_type:'0'  //pickup-0 delivery=1
     },
     {
         id: 3,
-        issue_name: "Not ready for pickups",
+        issue_name: "Not Ready for pick Up",
         is_act:1,
         is_deleted:0,
         collection_type:'0'  //pickup-0 delivery=1

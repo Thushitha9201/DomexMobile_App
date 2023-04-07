@@ -197,8 +197,9 @@ const TransactionReportScreen = (props: any) => {
                 <View style={{flex:1,alignItems:'flex-start',justifyContent:'center',marginLeft:10}}>
                     <Text style={{fontSize:17,fontWeight:'bold',color:ComponentsStyles.COLORS.BLACK}}>Selected Amount</Text>
                 </View>
-                <View style={{flex:1,alignItems:'flex-end',justifyContent:'center',marginRight:10}}>
-                <Text style={{fontSize:17,fontWeight:'bold',color:ComponentsStyles.COLORS.BLACK}}>Rs : {SelectAmount}</Text>
+                {/* //{SelectAmount} */}
+                <View style={{flex:1,alignItems:'flex-end',justifyContent:'space-evenly',marginRight:'5%'}}>
+                <Text style={{fontSize:17,fontWeight:'bold',color:ComponentsStyles.COLORS.BLACK}}>Rs : {SelectAmount} </Text>
                 </View>
 
             </View>
@@ -217,18 +218,18 @@ const TransactionReportScreen = (props: any) => {
 
                                     <View style={{ backgroundColor: ComponentsStyles.COLORS.WHITE, margin: 10, elevation: 15 }}>
                                         <View style={{ height: 40, flexDirection: 'row' }}>
-                                            <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, flexDirection: 'row', borderRadius: 5, backgroundColor: ComponentsStyles.COLORS.DARK_GRAY, height: 30 }}>
-                                                <Text style={{ color: ComponentsStyles.COLORS.WHITE, fontSize: 16, fontWeight: '600' }}>Tracking ID:</Text>
-                                                <Text style={{ color: ComponentsStyles.COLORS.WHITE, fontSize: 16, fontWeight: '600' }}>{item.tracking_id}</Text>
+                                            <View style={{ justifyContent: 'center', alignItems: 'flex-start', flex: 1, flexDirection: 'row', borderRadius: 5, backgroundColor: ComponentsStyles.COLORS.DARK_GRAY, height: 30 }}>
+                                                <Text style={{ color: ComponentsStyles.COLORS.WHITE, fontSize: 14, fontWeight: '600' }}>Tracking ID:</Text>
+                                                <Text style={{ color: ComponentsStyles.COLORS.WHITE, fontSize: 14, fontWeight: '600' }}>{item.tracking_id}</Text>
                                             </View>
                                             <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, borderRadius: 5, marginLeft: 20, backgroundColor: ComponentsStyles.COLORS.SECONDRY, height: 30 }}>
-                                                <Text style={{ color: ComponentsStyles.COLORS.WHITE, fontSize: 16, fontWeight: '600' }}>{item.job_stage == 1 ? "Pickup" : "Delivery"}</Text>
+                                                <Text style={{ color: ComponentsStyles.COLORS.WHITE, fontSize: 14, fontWeight: '600' }}>{item.job_stage == 1 ? "Pickup" : "Delivery"}</Text>
                                             </View>
 
                                         </View>
                                         <View style={{ height: 30, flexDirection: 'row' }}>
                                             <View style={{ flex: 2 }}>
-                                                <Text style={{ marginLeft: 10, fontWeight: '800', fontSize: 18, color: ComponentsStyles.COLORS.BLACK }}>{item.recevier_name}</Text>
+                                                <Text style={{ marginLeft: 10, fontWeight: '800', fontSize: 14, color: ComponentsStyles.COLORS.BLACK }}>{item.recevier_name}</Text>
                                             </View>
                                             <View style={{ flex: 1, alignItems: 'center' }}>
 
@@ -249,10 +250,10 @@ const TransactionReportScreen = (props: any) => {
                                         </View>
                                         <View style={{ marginTop: 5, marginBottom: 5, flexDirection: 'row' }}>
                                             <View style={{ flex: 2 }}>
-                                                <Text style={{ marginLeft: 10, fontWeight: '500', fontSize: 18, color: ComponentsStyles.COLORS.BLACK }}>{item.recevier_address_1}</Text>
+                                                <Text style={{ marginLeft: 10, fontWeight: '500', fontSize: 14, color: ComponentsStyles.COLORS.BLACK }}>{item.recevier_address_1}</Text>
                                             </View>
                                             <View style={{ flex: 1 }}>
-                                                <Text style={{ marginLeft: 10, fontWeight: '800', fontSize: 18, color: ComponentsStyles.COLORS.ICON_BLUE }}>LKR:{item.Package_amount}</Text>
+                                                <Text style={{ marginLeft: 10, fontWeight: '800', fontSize: 14, color: ComponentsStyles.COLORS.ICON_BLUE }}>LKR:{item.Package_amount}</Text>
                                             </View>
                                         </View>
                                     </View>

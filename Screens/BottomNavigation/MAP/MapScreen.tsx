@@ -40,11 +40,11 @@ const MapScreen = () => {
                 console.log("11");
                 
                 SelectType = "Pickup Issues"
-                settype("Pickup Isuues")
+                settype("pickup Issue")
             }else if(res==="2"){
                 SelectType = "Delivery Issues"
                 console.log("22",SelectType);
-                settype("Delivery Isuues")
+                settype("Delivery Issues")
             }
         })
 

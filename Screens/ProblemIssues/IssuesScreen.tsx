@@ -38,7 +38,8 @@ const IssuesScreen = () => {
                  });
 
               
-                settype("Pickup Issues")
+                //settype("Pickup Issues")
+                settype("Pick-Up Issue")
             }else if(res==="2"){
 
                 getIssuesDataForSelectModule(DELIVERIY_MODULE_REASONS,(result: any) => {
