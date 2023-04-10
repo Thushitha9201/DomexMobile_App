@@ -38,6 +38,9 @@ import DropdownAlert from "react-native-dropdownalert";
 import { getLastMeterReadingValueType, saveMeterReading } from "../../SQLiteDatabase/DBControllers/METER_READING_Controller";
 import GetLocation from 'react-native-get-location'
 import ImagePicker, { ImageOrVideo } from 'react-native-image-crop-picker';
+//import { NetInfoConnectedStates } from "@react-native-community/netinfo";
+import NetInfo from "@react-native-community/netinfo";
+import { Conection_Checking } from "../../Constants/CommanFunction";
 
 
 requestPermission();
@@ -79,7 +82,7 @@ const Login = () => {
         React.useCallback(() => {
 
             
-
+            Conection_Checking();
             DB.createTables();
             DB.tableIndexKey();
             DeviceInfo.getUniqueId().then((uniqueId) => {
@@ -469,6 +472,8 @@ const Login = () => {
         
         return fileName;
       };
+
+     
 
     return (
         <SafeAreaView style={style.CONTAINER}>
