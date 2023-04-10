@@ -20,7 +20,6 @@ import Spinner from "react-native-loading-spinner-overlay/lib";
 import packageJson from '../../../package.json';
 
 import ImagePicker, { ImageOrVideo } from 'react-native-image-crop-picker';
-import RBSheetConfirmComponent from "../../../Components/RBSheetConfirmComponent";
 import AsyncStorage from "@react-native-community/async-storage";
 import AsyncStorageConstants from "../../../Constants/AsyncStorageConstants";
 import { clearDataBase, createDataBase, deleteByTableName } from "../../../SQLiteDatabase/DBService";
@@ -70,7 +69,7 @@ const ProfileScreen = (props: any) => {
 
     //Animated View
     const [modalStyle, setModalStyle] = useState(new Animated.Value(height));
-
+    const [loandingspinner, setloandingspinner] = useState(false);
     const {
         navigation, route
     } = props;
@@ -89,6 +88,8 @@ const ProfileScreen = (props: any) => {
             getLastReadervalue();
             setHeaderNames();
             GetHeadereDetails();
+            slideOutModal()
+            
     
         }, []),
     );
@@ -408,7 +409,7 @@ const ProfileScreen = (props: any) => {
 
             Animated.timing(modalStyle, {
                 toValue: height / 4,
-                duration: 500,
+                duration: 100,
                 useNativeDriver: false,
             }).start();
 
@@ -703,9 +704,8 @@ const ProfileScreen = (props: any) => {
                     />
                 </View>
             </Animated.View>
-            
-           
 
+            
         </SafeAreaView>
     );
 
