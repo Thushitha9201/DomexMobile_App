@@ -45,6 +45,7 @@ import { Conection_Checking } from "../../Constants/CommanFunction";
 
 requestPermission();
 let height = Dimensions.get("screen").height;
+
 const Login = () => {
     const navigation = useNavigation();
     let dropDownAlertRef = useRef();
@@ -82,7 +83,7 @@ const Login = () => {
         React.useCallback(() => {
 
             
-            Conection_Checking();
+            //connection();
             DB.createTables();
             DB.tableIndexKey();
             DeviceInfo.getUniqueId().then((uniqueId) => {
@@ -146,6 +147,29 @@ const Login = () => {
             
         }, [])
     );
+
+    //Check internet Connection
+    const connection = () =>{
+        try {
+            Conection_Checking((res: any) => {
+                console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>', res)
+                if (res != false)  {
+                    console.log("Mobile Device Has Internet Connection");
+                    //call for login validation func
+                   Validate();          
+                }else{
+                    Alert.alert('Please Check Your Internet Connection and try again!');
+                }
+            })
+            
+        } catch (error) {
+            console.log(error,'!!!!!!!!!!!!!!!!!!!!!!>>>>>>>>>>>>>>>>>>>>>>>>>>>Error>>>>>>>>>>>>>');
+            
+        }
+        
+        
+
+    }
 
 
     const Get_LastMeterReading_Value = () => {
@@ -653,7 +677,7 @@ const Login = () => {
                 </View>
                 <ActionButton
                     innerStyle={style.ButtonStyle}
-                    onPress={Validate}
+                    onPress={connection}
                     title="Login"
                 />
 
