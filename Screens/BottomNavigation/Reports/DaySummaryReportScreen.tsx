@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Alert,Animated, Dimensions, FlatList, Keyboard, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
+import { Alert,Animated, Dimensions, FlatList, Keyboard, Platform, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import CheckButton from "../../../Components/CheckButton";
 import TopHeader from "../../../Components/TopHeader";
 import ComponentsStyles from "../../../Constants/ComponentsStyles";
