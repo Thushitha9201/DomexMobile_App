@@ -37,7 +37,7 @@ import moment from "moment";
 import DropdownAlert from "react-native-dropdownalert";
 import { getLastMeterReadingValueType, saveMeterReading } from "../../SQLiteDatabase/DBControllers/METER_READING_Controller";
 import GetLocation from 'react-native-get-location'
-import ImagePicker, { ImageOrVideo } from 'react-native-image-crop-picker';
+// import ImagePicker, { ImageOrVideo } from 'react-native-image-crop-picker';
 
 
 requestPermission();
@@ -167,7 +167,7 @@ const Login = () => {
 
             } else {
                 console.log('Not Avalable Meter Reading');
-
+                setMeaterBtnTitle('Start')
             }
         });
     }
@@ -242,6 +242,9 @@ const Login = () => {
                         // if (ReadingDate == "2023-03-30") {
                         navigation.navigate('NavigationScreen');
                     } else {
+
+                        console.log(MeaterBtnTitle,'=============++++================');
+                        
                         if (MeaterBtnTitle == "Start") {
                             setLoginHeading("LOGIN TO START THE DATE");
                             setShowQuckAcess(false);
@@ -445,30 +448,30 @@ const Login = () => {
 
     //capture meter reading image
 
-    const openCamera = () => {
-        ImagePicker.openCamera({
-          cropping: true,
-          mediaType: 'photo',
-          includeBase64: true,
-        }).then((imageData) => {
-          const base64Data = imageData.data;
-          const fileName = getUniqueFileName('jpg');
-          // writeFileToStorage(base64Data, fileName);
-        });
-      }
-      const getUniqueFileName = (fileExt: string) => {
-        //It is better naming file with current timestamp to achieve unique name
-        var d = new Date();
-        var year = d.getFullYear();
-        var month = d.getMonth() + 1;
-        var date = d.getDate();
-        var hour = d.getHours();
-        var minute = d.getMinutes();
-        var fileName = 'IMG' + year + month + date + hour + minute + '.' + fileExt;
-        console.log(fileName,'//////////////////////////////////////');
+    // const openCamera = () => {
+    //     ImagePicker.openCamera({
+    //       cropping: true,
+    //       mediaType: 'photo',
+    //       includeBase64: true,
+    //     }).then((imageData) => {
+    //       const base64Data = imageData.data;
+    //       const fileName = getUniqueFileName('jpg');
+    //       // writeFileToStorage(base64Data, fileName);
+    //     });
+    //   }
+    //   const getUniqueFileName = (fileExt: string) => {
+    //     //It is better naming file with current timestamp to achieve unique name
+    //     var d = new Date();
+    //     var year = d.getFullYear();
+    //     var month = d.getMonth() + 1;
+    //     var date = d.getDate();
+    //     var hour = d.getHours();
+    //     var minute = d.getMinutes();
+    //     var fileName = 'IMG' + year + month + date + hour + minute + '.' + fileExt;
+    //     console.log(fileName,'//////////////////////////////////////');
         
-        return fileName;
-      };
+    //     return fileName;
+    //   };
 
     return (
         <SafeAreaView style={style.CONTAINER}>
@@ -559,7 +562,7 @@ const Login = () => {
                                             <IconA name='ios-checkmark-circle' size={20} color={ComponentsStyles.COLORS.LOW_BUTTON_GREEN} style={{ marginRight: 5 }} />
                                         </View>
                                         :
-                                        <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", flexDirection: "row", }}onPress={openCamera}>
+                                        <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", flexDirection: "row", }}>
                                             <IconA name='cloud-upload' size={20} color={ComponentsStyles.COLORS.ICON_BLUE} style={{ marginRight: 5 }} />
                                             <Text style={{ fontFamily: ComponentsStyles.FONT_FAMILY.BOLD, color: ComponentsStyles.COLORS.ICON_BLUE, fontSize: 18, marginRight: 5 }}>Photo of Meter*</Text>
                                         </TouchableOpacity>

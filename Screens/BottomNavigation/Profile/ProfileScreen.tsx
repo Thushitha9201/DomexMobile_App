@@ -19,7 +19,7 @@ import DropdownAlert from "react-native-dropdownalert";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 import packageJson from '../../../package.json';
 
-import ImagePicker, { ImageOrVideo } from 'react-native-image-crop-picker';
+// import ImagePicker, { ImageOrVideo } from 'react-native-image-crop-picker';
 import RBSheetConfirmComponent from "../../../Components/RBSheetConfirmComponent";
 import AsyncStorage from "@react-native-community/async-storage";
 import AsyncStorageConstants from "../../../Constants/AsyncStorageConstants";
@@ -373,30 +373,30 @@ const ProfileScreen = (props: any) => {
 
     //capture meter reading image
 
-    const openCamera = () => {
-        ImagePicker.openCamera({
-          cropping: true,
-          mediaType: 'photo',
-          includeBase64: true,
-        }).then((imageData) => {
-          const base64Data = imageData.data;
-          const fileName = getUniqueFileName('jpg');
-          // writeFileToStorage(base64Data, fileName);
-        });
-      }
-      const getUniqueFileName = (fileExt: string) => {
-        //It is better naming file with current timestamp to achieve unique name
-        var d = new Date();
-        var year = d.getFullYear();
-        var month = d.getMonth() + 1;
-        var date = d.getDate();
-        var hour = d.getHours();
-        var minute = d.getMinutes();
-        var fileName = 'IMG' + year + month + date + hour + minute + '.' + fileExt;
-        console.log(fileName,'//////////////////////////////////////');
+    // const openCamera = () => {
+    //     ImagePicker.openCamera({
+    //       cropping: true,
+    //       mediaType: 'photo',
+    //       includeBase64: true,
+    //     }).then((imageData) => {
+    //       const base64Data = imageData.data;
+    //       const fileName = getUniqueFileName('jpg');
+    //       // writeFileToStorage(base64Data, fileName);
+    //     });
+    //   }
+    //   const getUniqueFileName = (fileExt: string) => {
+    //     //It is better naming file with current timestamp to achieve unique name
+    //     var d = new Date();
+    //     var year = d.getFullYear();
+    //     var month = d.getMonth() + 1;
+    //     var date = d.getDate();
+    //     var hour = d.getHours();
+    //     var minute = d.getMinutes();
+    //     var fileName = 'IMG' + year + month + date + hour + minute + '.' + fileExt;
+    //     console.log(fileName,'//////////////////////////////////////');
         
-        return fileName;
-      };
+    //     return fileName;
+    //   };
 
     //Animated View func
      const slideInModal = () => {
