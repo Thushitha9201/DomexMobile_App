@@ -245,7 +245,7 @@ const PickupandDelevaryScreen = (props: any) => {
             />
             <View style={{ height: 40, flexDirection: 'row', alignItems: 'center', marginRight: 10 }}>
                 <View style={{ flex: 2, justifyContent: 'center' }}>
-                    <Text style={{ fontSize: 20, marginLeft: 15 }}>{filterText}</Text>
+                    <Text style={{ fontSize: 20, marginLeft: 15,color:ComponentsStyles.COLORS.BLACK }}>{filterText}</Text>
                 </View>
                 <View style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'flex-end', marginRight: 10 }}>
                     <TouchableOpacity onPress={HandleFilter}>
