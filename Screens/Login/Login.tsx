@@ -257,6 +257,7 @@ const Login = () => {
 
                 } else {
                     console.log("--------------", response.data.response);
+                    Alert.alert('Error', "Invalid User Name Or Password")
                 }
 
 
