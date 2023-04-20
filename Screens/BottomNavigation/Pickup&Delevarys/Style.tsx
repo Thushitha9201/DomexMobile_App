@@ -57,7 +57,20 @@ export default StyleSheet.create({
     AttendButton: {
         marginRight: 15,
         marginBottom: 10
-    }, Reachedbtn: {
+    }, 
+    RByesbtn:{
+        backgroundColor:'green'
+    },
+    destailsTextbtn: {
+        fontFamily: ComponentsStyles.FONT_FAMILY.BOLD,
+        fontWeight: '700',
+        color: ComponentsStyles.COLORS.WHITE,
+        fontSize: 16,
+        fontStyle: 'normal',
+    },
+    Reachedbtn: {
+        borderRadius:5,
+        backgroundColor:ComponentsStyles.COLORS.GREEN,
         marginRight: 15,
     },
     issuebtn: {
