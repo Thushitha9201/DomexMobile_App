@@ -683,7 +683,7 @@ const ProfileScreen = (props: any) => {
                                     <IconA name='ios-checkmark-circle' size={20} color={ComponentsStyles.COLORS.LOW_BUTTON_GREEN} style={{ marginRight: 5 }} />
                                 </View>
                                     :
-                                <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", flexDirection: "row", }} onPress={openCamera}>
+                                <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", flexDirection: "row", }}>
 
                                     <IconA name='cloud-upload' size={20} color={ComponentsStyles.COLORS.ICON_BLUE} style={{ marginRight: 5 }} />
                                     <Text style={{ fontFamily: ComponentsStyles.FONT_FAMILY.BOLD, color: ComponentsStyles.COLORS.ICON_BLUE, fontSize: 18, marginRight: 5 }}>Photo of Meter*</Text>

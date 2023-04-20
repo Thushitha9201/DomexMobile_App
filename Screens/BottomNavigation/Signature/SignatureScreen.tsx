@@ -1,5 +1,5 @@
-import React, { createRef, useEffect } from "react";
-import { SafeAreaView, StyleSheet, Text, TouchableHighlight, View } from "react-native";
+import React, { createRef, useEffect,useState } from "react";
+import { Alert, SafeAreaView, StyleSheet, Text, TouchableHighlight, View } from "react-native";
 import TopHeader from "../../../Components/TopHeader";
 import ComponentsStyles from "../../../Constants/ComponentsStyles";
 import SignatureCapture from 'react-native-signature-capture';
@@ -7,8 +7,12 @@ import ActionButton from "../../../Components/ActionButton";
 import { getTrackingIDAsyncStorage } from '../../../Constants/AsynStorageFuntion';
 import {  UpdatePendingOrderStart } from '../../../SQLiteDatabase/DBControllers/PACKAGE_Contraller';
 
+
+
 var TRACKINGID: any;
 const SignatureScreen = (props: any) => {
+
+  const [Signature,setSignature] = useState(false);
 
   const {
     navigation, route
@@ -16,12 +20,32 @@ const SignatureScreen = (props: any) => {
 
   const sign = createRef();
 
+  const _onDragEvent = () => {
+		// This callback will be called when the user enters signature
+		console.log('dragged');
+    setSignature(true);
+	};
+
+  //Function validate the signature 
+  const checkSignature = () =>{
+    if (Signature!=false) { 
+      console.log('Signature to save is true');
+      saveSign()
+    }else{
+      console.log('No Signature to save===========================');
+      Alert.alert("Please enter the signature to proceed..");
+    }
+  }
+
   const resetSign = () => {
     sign.current.resetImage();
+    setSignature(false);
+    console.log('undragged');
   };
+
   const saveSign = () => {
+    // console.log(sign,'IIIIIIIIIIIIKKKKKKKKKK');
     sign.current.saveImage();
-    console.log(sign);
 
     UpdatePendingOrderStart(2, TRACKINGID, (result: any) => {
 console.log(result,'++++++++');
@@ -55,6 +79,7 @@ console.log(result,'++++++++');
         <SignatureCapture
           style={styles.container}
           ref={sign}
+          onDragEvent={_onDragEvent}
           showNativeButtons={false}
           showTitleLabel={false}
           viewMode={'portrait'}
@@ -73,7 +98,7 @@ console.log(result,'++++++++');
         <View style={{ flex: 1, margin: 3, marginRight: 15 }}>
           <ActionButton
             onPress={() => {
-              saveSign();
+              checkSignature();
             }}
             title="Complete"
           />
