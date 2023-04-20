@@ -139,12 +139,7 @@ const PikupAndDelevaryDetailsScreen = (props: any) => {
     const backfuntion = () => {
         navigation.goBack();
     }
-    useEffect(() => {
-       
-        
 
-
-    }, []);
 
     useFocusEffect(
         React.useCallback(() => {

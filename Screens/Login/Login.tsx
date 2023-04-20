@@ -51,6 +51,7 @@ const Login = () => {
     const [deviceID, setdeviceID] = useState('');
     const [modalStyle, setModalStyle] = useState(new Animated.Value(height));
     const [isSelected, setSelection] = useState(false);
+    const [isCheckbox, setisCheckbox] = useState(true);
 
     const [meterValue, setMeterValue] = useState('');
     const [remark, setremark] = useState('');
@@ -205,12 +206,6 @@ const Login = () => {
                     if (isSelected) {
                         AsyncStorage.setItem(AsyncStorageConstants.ASYNC_STORAGE_LOGIN_USER_NAME, uName)
                         AsyncStorage.setItem(AsyncStorageConstants.ASYNC_STORAGE_LOGIN_USER_PASSWORD, pword)
-
-                        // console.log(AsyncStorageConstants.ASYNC_STORAGE_LOGIN_USER_NAME,'uuuuuuuuuuuuuuuu');
-                        // console.log(AsyncStorageConstants.ASYNC_STORAGE_LOGIN_USER_PASSWORD,'pppppppppp');
-                        // console.log(uName,'====================================');
-                        // console.log();
-                        // console.log(pword,'====================================');
                     }
                     AsyncStorage.setItem(AsyncStorageConstants.ASYNC_STORAGE_LOGIN_USER_NAME, uName)
                     AsyncStorage.setItem(AsyncStorageConstants.ASYNC_USER_ID, response.data.sync_data.user_info.user_id)
@@ -635,15 +630,18 @@ const Login = () => {
                     placeholderColor={ComponentsStyles.COLORS.SECONDRY}
                 />
                 <View style={{ height: 30, flexDirection: 'row' }}>
-                    <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                        <CheckBox
-                            value={isSelected}
-                            onValueChange={setSelection}
-                            onChange={() => HandleClick()}
-                            style={style.checkbox}
-                        />
-                        <Text style={{ marginTop: 5, marginRight: 20, color: ComponentsStyles.COLORS.ICON_BLUE }}>Remember Me</Text>
-                    </View>
+                    {isCheckbox==false? 
+                     <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                     <CheckBox
+                         value={isSelected}
+                         onValueChange={setSelection}
+                         onChange={() => HandleClick()}
+                         style={style.checkbox}
+                     />
+                     <Text style={{ marginTop: 5, marginRight: 20, color: ComponentsStyles.COLORS.ICON_BLUE }}>Remember Me</Text>
+                 </View>
+                    :null}
+                   
                     <View style={{ flex: 1, alignItems: 'flex-end', justifyContent: 'center' }}>
                         <Text style={{ marginRight: 20, color: ComponentsStyles.COLORS.ICON_BLUE }}>Forgot Password</Text>
                     </View>
