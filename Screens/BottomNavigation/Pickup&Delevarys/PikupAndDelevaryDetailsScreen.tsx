@@ -6,7 +6,7 @@ import DetailsComponent from "../../../Components/DetailsComponent";
 import TopHeader from "../../../Components/TopHeader";
 import ComponentsStyles from "../../../Constants/ComponentsStyles";
 import Style from "./Style";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import RBSheet from "react-native-raw-bottom-sheet";
 import RBSheetConfirmComponent from "../../../Components/RBSheetConfirmComponent";
 import InputTextWithTopText from "../../../Components/InputTextWithTopText";
@@ -140,66 +140,74 @@ const PikupAndDelevaryDetailsScreen = (props: any) => {
         navigation.goBack();
     }
     useEffect(() => {
-        // setloandingspinner(true);
-        //set packages Data
        
-        ScreenType = route.params.ScreenType;
-        TrackingID = route.params.TrackingID;
-        console.log(route.params, "/////===========/////////",ScreenType,'........',TrackingID);
-
-        // getScreenTypeAsyncStorage().then(res => {
-        //     ScreenType = res;
-        // })
-        AsyncStorage.setItem(AsyncStorageConstants.ASYNC_STORAGE_TrackID,TrackingID+"" )
-        console.log(ScreenType);
-        if (ScreenType === 'Home') {
-            seteditdetails(true)
-            setactionButtonTitle('Attend')
-        } else if (ScreenType === 'PackagesList') {
-            seteditdetails(false)
-            setactionButtonTitle('Scan Packages')
-        }
-        console.log( TrackingID,'-----------');
-        Get_Packages_Specific_Data(TrackingID, (result: any) => {
-
-            console.log(result,'=============');
-            
-            
-            
-       
-        setTrackID(result[0].tracking_id)
-        setPackagesPrice(result[0].Package_amount)
-        setReciername(result[0].recevier_name)
-        setReciermobile(result[0].recevier_mobile)
-        setRecieraddress(result[0].recevier_address_1)
-        setname(result[0].sender_name)
-        setaddress(result[0].sender_address_1)
-        setmobile(result[0].sender_mobile)
-        setsenderaltmobile(result[0].sender_mobile_alter)
-        // setnamePickups(result.rows.item(0).namePickups)
-        // setaddressPickups(result.rows.item(0).Recieraddress)// need to change with real data with
-        setPType(result[0].Payment_Mode_Des)
-        // setdescription(result.rows.item(0).description)
-        // setspecialIntroduction(result.rows.item(0).specialIntroduction)
-        setNoofPackaages(result[0].package_count)
-        setNoofPieces(result[0].pieces_count)
-
-       
-        Plength = result[0].length;
-        Pheight = result[0].height;
-        Pwidth = result[0].width;
-        Pweight = result[0].weight;
-        setwidth(Pwidth);
-        setheight(Pheight);
-        setlenght(Plength);
-        setweight(Pweight);
-          
-        // setloandingspinner(false);
-        });
         
 
 
     }, []);
+
+    useFocusEffect(
+        React.useCallback(() => {
+         
+            setloandingspinner(true);
+            //set packages Data
+           
+            ScreenType = route.params.ScreenType;
+            TrackingID = route.params.TrackingID;
+            console.log(route.params, "/////===========/////////",ScreenType,'........',TrackingID);
+    
+            // getScreenTypeAsyncStorage().then(res => {
+            //     ScreenType = res;
+            // })
+            AsyncStorage.setItem(AsyncStorageConstants.ASYNC_STORAGE_TrackID,TrackingID+"" )
+            console.log(ScreenType);
+            if (ScreenType === 'Home') {
+                seteditdetails(true)
+                setactionButtonTitle('Attend')
+            } else if (ScreenType === 'PackagesList') {
+                seteditdetails(false)
+                setactionButtonTitle('Scan Packages')
+            }
+            console.log( TrackingID,'-----------');
+            Get_Packages_Specific_Data(TrackingID, (result: any) => {
+    
+                console.log(result,'=============');
+                
+                
+                
+           
+            setTrackID(result[0].tracking_id)
+            setPackagesPrice(result[0].Package_amount)
+            setReciername(result[0].recevier_name)
+            setReciermobile(result[0].recevier_mobile)
+            setRecieraddress(result[0].recevier_address_1)
+            setname(result[0].sender_name)
+            setaddress(result[0].sender_address_1)
+            setmobile(result[0].sender_mobile)
+            setsenderaltmobile(result[0].sender_mobile_alter)
+            // setnamePickups(result.rows.item(0).namePickups)
+            // setaddressPickups(result.rows.item(0).Recieraddress)// need to change with real data with
+            setPType(result[0].Payment_Mode_Des)
+            // setdescription(result.rows.item(0).description)
+            // setspecialIntroduction(result.rows.item(0).specialIntroduction)
+            setNoofPackaages(result[0].package_count)
+            setNoofPieces(result[0].pieces_count)
+    
+           
+            Plength = result[0].length;
+            Pheight = result[0].height;
+            Pwidth = result[0].width;
+            Pweight = result[0].weight;
+            setwidth(Pwidth);
+            setheight(Pheight);
+            setlenght(Plength);
+            setweight(Pweight);
+              
+            setloandingspinner(false);
+            });
+    
+        }, []),
+    );
 
     return (
         <SafeAreaView style={ComponentsStyles.CONTAINER}>
