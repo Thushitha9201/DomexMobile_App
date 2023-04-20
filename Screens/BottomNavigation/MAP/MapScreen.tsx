@@ -9,14 +9,15 @@ import IconA from 'react-native-vector-icons/Ionicons';
 import IconB from 'react-native-vector-icons/MaterialIcons';
 import Marker from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
-import { getTrackingIDAsyncStorage,getSelectTypeAsyncStorage } from '../../../Constants/AsynStorageFuntion';
+import { getTrackingIDAsyncStorage, getSelectTypeAsyncStorage } from '../../../Constants/AsynStorageFuntion';
 import { Get_Packages_Specific_Data } from '../../../SQLiteDatabase/DBControllers/PACKAGE_Contraller';
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import CheckButton from "../../../Components/CheckButton";
 var TRACKINGID: any;
 var Type: any;
 
-var SelectType:any;
+var SelectType: any;
 let heigh = Dimensions.get("screen").height;
 
 const MapScreen = () => {
@@ -31,7 +32,7 @@ const MapScreen = () => {
     //Animated View 
     const [modalStyle, setModalStyle] = useState(new Animated.Value(heigh));
     // const [isShowSweep, setIsShowSweep] = useState(true);
-    
+
     useEffect(() => {
         getTrackingIDAsyncStorage().then(res => {
             console.log(res, ';;;;;;;;;;;;;;;;;;;;;;;;;;;');
@@ -40,14 +41,14 @@ const MapScreen = () => {
         })
         getSelectTypeAsyncStorage().then(res => {
             console.log(res, ';;;;;;444444444;;;;;;;;;;;;;;;;;;;;;');
-            if(res==="1"){
+            if (res === "1") {
                 console.log("11");
-                
+
                 SelectType = "Pickup Issues"
                 settype("pickup Issue")
-            }else if(res==="2"){
+            } else if (res === "2") {
                 SelectType = "Delivery Issues"
-                console.log("22",SelectType);
+                console.log("22", SelectType);
                 settype("Delivery Issues")
             }
         })
@@ -73,7 +74,7 @@ const MapScreen = () => {
         navigation.navigate('IssuesScreen');
     }
     const slideInModal = () => {
-        
+
 
         try {
 
@@ -81,7 +82,7 @@ const MapScreen = () => {
             console.log('sampleIn');
 
             Animated.timing(modalStyle, {
-                toValue: heigh / 1.7,
+                toValue: heigh / 1.8,
                 duration: 500,
                 useNativeDriver: false,
             }).start();
@@ -93,7 +94,7 @@ const MapScreen = () => {
 
     };
     const slideOutModal = () => {
-        
+
         try {
 
 
@@ -262,20 +263,30 @@ const MapScreen = () => {
                     })
                 }}>
 
-                    <View>
+                <View>
 
                     <ActionButton
                         title="Proceed"
                         style={Style.Reachedbtn}
                         onPress={HandleProceed}
+                        innerStyle={Style.Reachedbtn}
                     />
+
                     <ActionButton
                         title={type}
                         onPress={HandlePickupIssue}
                         innerStyle={Style.issuebtn}
                     />
-                    </View>
-                </Animated.View>
+                    {type == "Delivery Issues" ?
+                        <ActionButton
+                            title="Return"
+                            onPress={HandlePickupIssue}
+                            innerStyle={Style.issuebtn}
+                        />
+                        : null}
+
+                </View>
+            </Animated.View>
         </SafeAreaView>
     );
 }
